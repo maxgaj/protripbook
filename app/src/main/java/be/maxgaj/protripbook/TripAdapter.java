@@ -15,16 +15,16 @@ import butterknife.ButterKnife;
 
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder> {
     private Cursor cursor;
+    private Context context;
 
-    public TripAdapter(Cursor cursor){
-        this.cursor = cursor;
+    public TripAdapter(Context context){
+        this.context = context;
     }
 
     @NonNull
     @Override
     public TripViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(this.context);
         View view = inflater.inflate(R.layout.trip_list_item, parent, false);
         TripViewHolder viewHolder = new TripViewHolder(view);
         return viewHolder;
@@ -43,7 +43,9 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
     @Override
     public int getItemCount() {
-        return this.cursor.getCount();
+        if (this.cursor != null)
+            return this.cursor.getCount();
+        return 0;
     }
 
     public void swapCursor(Cursor newCursor){
@@ -63,8 +65,8 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             ButterKnife.bind(this, view);
         }
 
-        void bind(int listIndex){
-            tripItemTextView.setText(String.valueOf(listIndex));
-        }
+//        void bind(int listIndex){
+//            tripItemTextView.setText(String.valueOf(listIndex));
+//        }
     }
 }
