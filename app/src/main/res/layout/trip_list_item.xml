@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/light_blue_500"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/trip_item_tv"
+        android:background="@color/light_blue_700"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
