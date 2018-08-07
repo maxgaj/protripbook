@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_unit_option_labels">
+        <item>@string/pref_unit_label_km</item>
+        <item>@string/pref_unit_label_mi</item>
+    </array>
+    <array name="pref_unit_option_values">
+        <item>@string/pref_unit_value_km</item>
+        <item>@string/pref_unit_value_mi</item>
+    </array>
+</resources>

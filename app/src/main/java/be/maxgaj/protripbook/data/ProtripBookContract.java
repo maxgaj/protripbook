@@ -17,7 +17,6 @@ public class ProtripBookContract {
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_BRAND = "brand";
         public static final String COLUMN_PLATE = "plate";
-        public static final String COLUMN_INITIAL_ODOMETER = "initOdometer";
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_CARS).build();
 

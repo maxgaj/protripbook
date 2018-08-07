@@ -1,4 +1,36 @@
 <resources>
     <string name="app_name">ProtripBook</string>
+    <string name="action_settings">Settings</string>
+    <string name="car_activity_label">Add new car</string>
 
+    <string name="pref_cat_title_options">Options</string>
+    <string name="pref_cat_key_options" translatable="false">options</string>
+    <string name="pref_cat_title_car">Cars</string>
+    <string name="pref_cat_key_car" translatable="false">cars</string>
+
+    <string name="pref_unit_label">Distance Unit</string>
+    <string name="pref_unit_label_km">Kilometers</string>
+    <string name="pref_unit_label_mi">Miles</string>
+    <string name="pref_unit_key" translatable="false">unit</string>
+    <string name="pref_unit_value_km" translatable="false">km</string>
+    <string name="pref_unit_value_mi" translatable="false">mi</string>
+
+    <string name="pref_car_add_label">Add new car</string>
+
+    <string name="pref_car_label">Select car</string>
+    <string name="pref_car_key" translatable="false">car</string>
+
+    <string name="car_input_hint_name">Car name</string>
+    <string name="car_input_hint_brand">Car brand</string>
+    <string name="car_input_hint_plate">Car plate</string>
+    <string name="car_input_hint_reading">Odometer first reading</string>
+    <string name="car_input_hint_date">Odometer first date</string>
+    <string name="car_input_error_name">Enter a name for your car</string>
+    <string name="car_input_error_brand">Enter the brand of your car</string>
+    <string name="car_input_error_plate">Enter the license plate of your car</string>
+    <string name="car_input_error_reading">Enter the initial reading of the odometer</string>
+    <string name="car_input_error_date">Enter the date of the initial reading</string>
+    <string name="car_button_add">Add</string>
+    <string name="car_button_cancel">Cancel</string>
+    <string name="car_confirm">New car added</string>
 </resources>

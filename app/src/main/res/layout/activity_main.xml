@@ -30,7 +30,7 @@
             android:id="@+id/main_tabs"
             android:background="@color/colorPrimary"
             app:tabTextColor="#ffffff"
-            app:tabSelectedTextColor="@color/colorAccent"
+            app:tabSelectedTextColor="@color/light_green_A400"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

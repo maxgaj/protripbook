@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import be.maxgaj.protripbook.data.ProtripBookContract;
-import be.maxgaj.protripbook.data.ProtripBookDbHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

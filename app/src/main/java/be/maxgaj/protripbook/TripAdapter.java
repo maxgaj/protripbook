@@ -49,11 +49,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
     }
 
     public void swapCursor(Cursor newCursor){
-        if (this.cursor != null)
-            this.cursor.close();
-        this.cursor = newCursor;
-        if (newCursor != null)
+        if (newCursor != null && newCursor != this.cursor){
+            if (this.cursor != null)
+                this.cursor.close();
+            this.cursor = newCursor;
             this.notifyDataSetChanged();
+        }
     }
 
 
@@ -64,9 +65,5 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
             super(view);
             ButterKnife.bind(this, view);
         }
-
-//        void bind(int listIndex){
-//            tripItemTextView.setText(String.valueOf(listIndex));
-//        }
     }
 }

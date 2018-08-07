@@ -20,8 +20,7 @@ public class ProtripBookDbHelper extends SQLiteOpenHelper {
                 ProtripBookContract.CarEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ProtripBookContract.CarEntry.COLUMN_NAME + " TEXT NOT NULL, " +
                 ProtripBookContract.CarEntry.COLUMN_BRAND + " TEXT, " +
-                ProtripBookContract.CarEntry.COLUMN_PLATE + " TEXT, " +
-                ProtripBookContract.CarEntry.COLUMN_INITIAL_ODOMETER + " INTEGER" +
+                ProtripBookContract.CarEntry.COLUMN_PLATE + " TEXT " +
                 ");";
         db.execSQL(SQL_CREATE_CAR_TABLE);
 
@@ -42,7 +41,7 @@ public class ProtripBookDbHelper extends SQLiteOpenHelper {
                 ProtripBookContract.OdometerEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ProtripBookContract.OdometerEntry.COLUMN_CAR + " INTEGER NOT NULL, " +
                 ProtripBookContract.OdometerEntry.COLUMN_READING + " REAL NOT NULL, " +
-                ProtripBookContract.OdometerEntry.COLUMN_DATE + "DATE NOT NULL " +
+                ProtripBookContract.OdometerEntry.COLUMN_DATE + " TEXT NOT NULL " +
                 ");";
         db.execSQL(SQL_CREATE_ODOMETER_TABLE);
     }
