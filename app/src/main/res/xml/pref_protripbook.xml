@@ -27,4 +27,28 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/pref_cat_title_report"
+        android:key="@string/pref_cat_key_report">
+
+        <SwitchPreference
+            android:key="@string/pref_report_first_odometer_key"
+            android:title="@string/pref_report_first_odometer_title"
+            android:defaultValue="@string/pref_report_first_odometer_default" />
+
+        <be.maxgaj.protripbook.preference.DatePreference
+            android:key="@string/pref_report_first_date_key"
+            android:title="@string/pref_report_first_date_title"/>
+
+        <SwitchPreference
+            android:key="@string/pref_report_last_odometer_key"
+            android:title="@string/pref_report_last_odometer_title"
+            android:defaultValue="@string/pref_report_last_odometer_default" />
+
+        <be.maxgaj.protripbook.preference.DatePreference
+            android:key="@string/pref_report_last_date_key"
+            android:title="@string/pref_report_last_date_title"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

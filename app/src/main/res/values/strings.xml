@@ -7,6 +7,8 @@
     <string name="pref_cat_key_options" translatable="false">options</string>
     <string name="pref_cat_title_car">Cars</string>
     <string name="pref_cat_key_car" translatable="false">cars</string>
+    <string name="pref_cat_title_report">Report</string>
+    <string name="pref_cat_key_report" translatable="false">report</string>
 
     <string name="pref_unit_label">Distance Unit</string>
     <string name="pref_unit_label_km">Kilometers</string>
@@ -16,9 +18,21 @@
     <string name="pref_unit_value_mi" translatable="false">mi</string>
 
     <string name="pref_car_add_label">Add new car</string>
-
     <string name="pref_car_label">Select car</string>
     <string name="pref_car_key" translatable="false">car</string>
+
+    <string name="pref_report_first_odometer_title">Use first odometer date</string>
+    <string name="pref_report_first_odometer_key">first_odometer</string>
+    <string name="pref_report_first_odometer_default">true</string>
+    <string name="pref_report_last_odometer_title">Use last odometer date</string>
+    <string name="pref_report_last_odometer_key">last_odometer</string>
+    <string name="pref_report_last_odometer_default">true</string>
+    <string name="pref_report_button_set">Set</string>
+    <string name="pref_report_button_cancel">Cancel</string>
+    <string name="pref_report_first_date_key">first_date</string>
+    <string name="pref_report_first_date_title">First date</string>
+    <string name="pref_report_last_date_key">last_date</string>
+    <string name="pref_report_last_date_title">Last date</string>
 
     <string name="car_input_hint_name">Car name</string>
     <string name="car_input_hint_brand">Car brand</string>

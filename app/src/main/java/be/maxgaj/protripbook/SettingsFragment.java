@@ -1,6 +1,8 @@
 package be.maxgaj.protripbook;
 
 import android.support.annotation.NonNull;
+import android.support.v14.preference.SwitchPreference;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -16,9 +18,12 @@ import android.support.v7.preference.PreferenceScreen;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import be.maxgaj.protripbook.data.ProtripBookContract;
+import be.maxgaj.protripbook.preference.DatePreference;
+import be.maxgaj.protripbook.preference.DatePreferenceDialogFragmentCompat;
 
 public class SettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener,
@@ -28,17 +33,44 @@ public class SettingsFragment extends PreferenceFragmentCompat
     private static final int CARS_LOADER_ID = 20;
 
     private ListPreference switchCarPreference;
+    private SwitchPreference firstOdometerPreference;
+    private SwitchPreference lastOdometerPreference;
+    private DatePreference firstDatePreference;
+    private DatePreference lastDatePreference;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.pref_protripbook);
 
         this.switchCarPreference = (ListPreference) findPreference(getResources().getString(R.string.pref_car_key)) ;
+        this.firstOdometerPreference = (SwitchPreference) findPreference(getResources().getString(R.string.pref_report_first_odometer_key)) ;
+        this.lastOdometerPreference = (SwitchPreference) findPreference(getResources().getString(R.string.pref_report_last_odometer_key)) ;
+        this.firstDatePreference = (DatePreference) findPreference(getResources().getString(R.string.pref_report_first_date_key)) ;
+        this.lastDatePreference = (DatePreference) findPreference(getResources().getString(R.string.pref_report_last_date_key)) ;
 
         getLoaderManager().initLoader(CARS_LOADER_ID, null, this);
         getLoaderManager().getLoader(CARS_LOADER_ID).startLoading();
 
         setPreferenceSummaries();
+
+        this.firstDatePreference.setEnabled(!(this.firstOdometerPreference.isChecked()));
+        this.lastDatePreference.setEnabled(!(this.lastOdometerPreference.isChecked()));
+        this.firstOdometerPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean isChecked = (boolean) newValue;
+                firstDatePreference.setEnabled(!isChecked);
+                return true;
+            }
+        });
+        this.lastOdometerPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                boolean isChecked = (boolean) newValue;
+                lastDatePreference.setEnabled(!isChecked);
+                return true;
+            }
+        });
     }
 
     private void setPreferenceSummaries(){
@@ -53,14 +85,16 @@ public class SettingsFragment extends PreferenceFragmentCompat
                 int nestedCount = ((PreferenceCategory) p).getPreferenceCount();
                 for (int j=0; j<nestedCount; j++){
                     Preference nestedPreference = ((PreferenceCategory) p).getPreference(j);
-                    if (!( nestedPreference instanceof CheckBoxPreference)) {
+                    if (!( nestedPreference instanceof CheckBoxPreference || nestedPreference instanceof
+                    SwitchPreference)) {
                         String value = sharedPreferences.getString( nestedPreference.getKey(), "");
                         setPreferenceSummary( nestedPreference, value);
                     }
                 }
             }
             else {
-                if (!(p instanceof CheckBoxPreference)) {
+                if (!(p instanceof CheckBoxPreference || p instanceof
+                        SwitchPreference)) {
                     String value = sharedPreferences.getString(p.getKey(), "");
                     setPreferenceSummary(p, value);
                 }
@@ -82,10 +116,26 @@ public class SettingsFragment extends PreferenceFragmentCompat
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference preference = findPreference(key);
         if (preference != null){
-            if (!(preference instanceof CheckBoxPreference)){
+            if (!(preference instanceof CheckBoxPreference || preference instanceof
+                    SwitchPreference)){
                 String value = sharedPreferences.getString(preference.getKey(), "");
                 setPreferenceSummary(preference, value);
             }
+        }
+    }
+
+    @Override
+    public void onDisplayPreferenceDialog(Preference preference) {
+        DialogFragment dialogFragment = null;
+        if (preference instanceof DatePreference){
+            dialogFragment = DatePreferenceDialogFragmentCompat.newInstance(preference.getKey());
+        }
+        if (dialogFragment != null){
+            dialogFragment.setTargetFragment(this, 0);
+            dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference"+".preferenceFragment.DIALOG");
+        }
+        else {
+            super.onDisplayPreferenceDialog(preference);
         }
     }
 
