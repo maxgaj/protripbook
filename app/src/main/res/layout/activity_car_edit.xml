@@ -52,40 +52,10 @@
                 android:hint="@string/car_input_hint_plate" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/car_input_layout_reading"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/car_input_reading"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:inputType="numberDecimal"
-                android:hint="@string/car_input_hint_reading" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/car_input_layout_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/car_input_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:inputType="date"
-                android:hint="@string/car_input_hint_date" />
-        </android.support.design.widget.TextInputLayout>
-
-
-
         <Button android:id="@+id/car_btn_add"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/car_button_add"
+            android:text="@string/car_button_update"
             android:background="@color/colorPrimary"
             android:layout_marginTop="40dp"
             android:textColor="@android:color/white"/>
@@ -97,6 +67,14 @@
             android:background="@android:color/white"
             android:layout_marginTop="16dp"
             android:textColor="@color/colorPrimary"/>
+
+        <Button android:id="@+id/car_btn_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/car_button_delete"
+            android:background="@color/colorAccent"
+            android:layout_marginTop="16dp"
+            android:textColor="@android:color/white"/>
 
     </LinearLayout>
 </ScrollView>

@@ -1,6 +1,7 @@
 package be.maxgaj.protripbook;
 
 import android.content.ContentUris;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,6 +39,7 @@ public class CarInfoFragment extends Fragment implements
     @BindView(R.id.car_info_plate_value) TextView plateTextView;
     @BindView(R.id.car_info_data_container) LinearLayout dataContainer;
     @BindView(R.id.car_info_error_container) LinearLayout errorContainer;
+    @BindView(R.id.car_info_edit_button) Button editButton;
 
     public CarInfoFragment() {}
 
@@ -55,6 +58,15 @@ public class CarInfoFragment extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_car_info, container, false);
         ButterKnife.bind(this, view);
+        this.editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), CarEditActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT, carId);
+                startActivity(intent);
+            }
+        });
+
         if(this.carId.equals(getString(R.string.pref_car_default))) {
             displayError();
         }
