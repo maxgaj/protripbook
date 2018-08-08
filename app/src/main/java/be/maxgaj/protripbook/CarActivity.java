@@ -16,8 +16,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import be.maxgaj.protripbook.data.ProtripBookContract;
@@ -185,14 +187,15 @@ public class CarActivity extends AppCompatActivity {
     }
 
     private boolean validateDate(){
-        // TODO date matcher
-        if (this.dateEditText.getText().toString().trim().isEmpty()){
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            format.parse(this.dateEditText.getText().toString().trim());
+            this.dateLayout.setErrorEnabled(false);
+            return true;
+        } catch (ParseException e){
             this.dateLayout.setError(getString(R.string.car_input_error_date));
             this.dateEditText.requestFocus();
             return false;
-        } else {
-            this.dateLayout.setErrorEnabled(false);
-            return true;
         }
     }
 

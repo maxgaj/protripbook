@@ -5,4 +5,5 @@
     <dimen name="form_padding">16dp</dimen>
     <dimen name="card_bottom_padding">8dp</dimen>
     <dimen name="error_min_height">160dp</dimen>
+    <dimen name="fragment_padding">8dp</dimen>
 </resources>

@@ -1,5 +1,6 @@
 package be.maxgaj.protripbook;
 
+
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,35 +14,37 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import be.maxgaj.protripbook.data.ProtripBookContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-
-public class CarInfoFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class OdometerFragment extends Fragment implements
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
     private String carId;
 
-    private static final String TAG = CarInfoFragment.class.getSimpleName();
-    private static final int CAR_INFO_LOADER_ID = 30;
+    private static final String TAG = OdometerFragment.class.getSimpleName();
+    private static final int ODOMETER_LOADING_ID = 50;
 
-    @BindView(R.id.car_info_name_value) TextView nameTextView;
-    @BindView(R.id.car_info_brand_value) TextView brandTextView;
-    @BindView(R.id.car_info_plate_value) TextView plateTextView;
-    @BindView(R.id.car_info_data_container) LinearLayout dataContainer;
-    @BindView(R.id.car_info_error_container) LinearLayout errorContainer;
-    @BindView(R.id.car_info_edit_button) Button editButton;
+    public static final String INTENT_DATE = "intent_date";
+    public static final String INTENT_READING = "intent_reading";
 
-    public CarInfoFragment() {}
+
+    @BindView(R.id.odometer_date_value) TextView dateTextView;
+    @BindView(R.id.odometer_reading_value) TextView readingTextView;
+    @BindView(R.id.odometer_unit_value) TextView unitTextView;
+    @BindView(R.id.odometer_container) CardView odometerContainer;
+    @BindView(R.id.odometer_edit_button) Button updateButton;
+
+    public OdometerFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,56 +54,51 @@ public class CarInfoFragment extends Fragment implements
         this.carId = sharedPreferences.getString(getResources().getString(R.string.pref_car_key), getResources().getString(R.string.pref_car_default));
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_car_info, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_odometer, container, false);
         ButterKnife.bind(this, view);
-        this.editButton.setOnClickListener(new View.OnClickListener() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        this.unitTextView.setText(sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km)));
+
+        this.updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), CarEditActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, carId);
+                Intent intent = new Intent(getContext(), OdometerActivity.class);
+                intent.putExtra(INTENT_DATE, dateTextView.getText());
+                intent.putExtra(INTENT_READING, readingTextView.getText());
                 startActivity(intent);
             }
         });
 
         if(this.carId.equals(getString(R.string.pref_car_default))) {
-            displayError();
+            this.odometerContainer.setVisibility(View.INVISIBLE);
         }
         else {
-            displayData();
+            this.odometerContainer.setVisibility(View.VISIBLE);
         }
+
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(CAR_INFO_LOADER_ID, null, this);
+        getLoaderManager().initLoader(ODOMETER_LOADING_ID, null, this);
         if (!(this.carId.equals(getString(R.string.pref_car_default))))
-            getLoaderManager().getLoader(CAR_INFO_LOADER_ID).startLoading();
-    }
-
-    private void displayError(){
-        this.dataContainer.setVisibility(View.INVISIBLE);
-        this.errorContainer.setVisibility(View.VISIBLE);
-    }
-
-    private void displayData(){
-        this.dataContainer.setVisibility(View.VISIBLE);
-        this.errorContainer.setVisibility(View.INVISIBLE);
+            getLoaderManager().getLoader(ODOMETER_LOADING_ID).startLoading();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         if(this.carId.equals(getString(R.string.pref_car_default))) {
-            displayError();
+            this.odometerContainer.setVisibility(View.INVISIBLE);
         }
         else {
-            displayData();
-            getLoaderManager().restartLoader(CAR_INFO_LOADER_ID, null, this);
+            this.odometerContainer.setVisibility(View.VISIBLE);
+            getLoaderManager().restartLoader(ODOMETER_LOADING_ID, null, this);
         }
     }
 
@@ -112,14 +110,17 @@ public class CarInfoFragment extends Fragment implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_car_key))){
+        if (key.equals(getString(R.string.pref_unit_key))){
+            this.unitTextView.setText(sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km)));
+        }
+        else if (key.equals(getString(R.string.pref_car_key))){
             this.carId = sharedPreferences.getString(key, getResources().getString(R.string.pref_car_default));
             if(this.carId.equals(getString(R.string.pref_car_default))) {
-                displayError();
+                this.odometerContainer.setVisibility(View.INVISIBLE);
             }
             else {
-                displayData();
-                getLoaderManager().restartLoader(CAR_INFO_LOADER_ID, null, this);
+                this.odometerContainer.setVisibility(View.VISIBLE);
+                getLoaderManager().restartLoader(ODOMETER_LOADING_ID, null, this);
             }
         }
     }
@@ -128,12 +129,12 @@ public class CarInfoFragment extends Fragment implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         return new AsyncTaskLoader<Cursor>(getActivity()) {
-            Cursor carData = null;
+            Cursor odometerData = null;
 
             @Override
             protected void onStartLoading() {
-                if (this.carData != null)
-                    deliverResult(this.carData);
+                if (this.odometerData != null)
+                    deliverResult(this.odometerData);
                 else
                     forceLoad();
             }
@@ -142,12 +143,11 @@ public class CarInfoFragment extends Fragment implements
             @Override
             public Cursor loadInBackground() {
                 try {
-                    Uri uri = ContentUris.withAppendedId(ProtripBookContract.CarEntry.CONTENT_URI, Long.parseLong(carId));
-                    return getContext().getContentResolver().query(uri,
+                    return getContext().getContentResolver().query(ProtripBookContract.OdometerEntry.CONTENT_URI,
                             null,
-                            null,
-                            null,
-                            null);
+                            ProtripBookContract.OdometerEntry.COLUMN_CAR+"=?",
+                            new String[]{carId},
+                            ProtripBookContract.OdometerEntry._ID+" DESC LIMIT 1");
                 } catch (Exception e) {
                     Log.e(TAG, "loadInBackground: Failed to asynchronously load data");
                     e.printStackTrace();
@@ -157,7 +157,7 @@ public class CarInfoFragment extends Fragment implements
 
             @Override
             public void deliverResult(@Nullable Cursor data) {
-                this.carData = data;
+                this.odometerData = data;
                 super.deliverResult(data);
             }
         };
@@ -166,12 +166,10 @@ public class CarInfoFragment extends Fragment implements
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToFirst()){
-            String name = data.getString(data.getColumnIndex(ProtripBookContract.CarEntry.COLUMN_NAME));
-            String brand = data.getString(data.getColumnIndex(ProtripBookContract.CarEntry.COLUMN_BRAND));
-            String plate = data.getString(data.getColumnIndex(ProtripBookContract.CarEntry.COLUMN_PLATE));
-            this.nameTextView.setText(name);
-            this.brandTextView.setText(brand);
-            this.plateTextView.setText(plate);
+            String date = data.getString(data.getColumnIndex(ProtripBookContract.OdometerEntry.COLUMN_DATE));
+            float reading = data.getFloat(data.getColumnIndex(ProtripBookContract.OdometerEntry.COLUMN_READING));
+            this.dateTextView.setText(date);
+            this.readingTextView.setText(String.valueOf(reading));
         }
     }
 

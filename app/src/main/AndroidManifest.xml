@@ -35,6 +35,7 @@
             android:theme="@style/AppTheme.ActionBar">
             <intent-filter>
                 <action android:name="be.maxgaj.protripbook.CarActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -45,6 +46,17 @@
             android:theme="@style/AppTheme.ActionBar">
             <intent-filter>
                 <action android:name="be.maxgaj.protripbook.CarEditActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".OdometerActivity"
+            android:label="@string/odometer_activity_label"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.ActionBar">
+            <intent-filter>
+                <action android:name="be.maxgaj.protripbook.OdometerActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

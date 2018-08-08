@@ -9,8 +9,15 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:id="@+id/static_fragment"
+        android:id="@+id/car_info_fragment"
         android:name="be.maxgaj.protripbook.CarInfoFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <fragment
+        android:id="@+id/odometer_fragment"
+        android:name="be.maxgaj.protripbook.OdometerFragment"
+        android:layout_marginTop="@dimen/fragment_padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
