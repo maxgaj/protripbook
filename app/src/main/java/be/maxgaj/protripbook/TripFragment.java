@@ -2,7 +2,6 @@ package be.maxgaj.protripbook;
 
 import android.support.v4.app.LoaderManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

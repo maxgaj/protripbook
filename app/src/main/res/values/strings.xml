@@ -20,6 +20,7 @@
     <string name="pref_car_add_label">Add new car</string>
     <string name="pref_car_label">Select car</string>
     <string name="pref_car_key" translatable="false">car</string>
+    <string name="pref_car_default" translatable="false">-1</string>
 
     <string name="pref_report_first_odometer_title">Use first odometer date</string>
     <string name="pref_report_first_odometer_key">first_odometer</string>
@@ -47,4 +48,6 @@
     <string name="car_button_add">Add</string>
     <string name="car_button_cancel">Cancel</string>
     <string name="car_confirm">New car added</string>
+
+    <string name="car_info_edit_button">Edit</string>
 </resources>

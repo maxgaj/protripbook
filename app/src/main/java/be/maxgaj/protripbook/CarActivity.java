@@ -2,7 +2,9 @@ package be.maxgaj.protripbook;
 
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -124,8 +126,15 @@ public class CarActivity extends AppCompatActivity {
 
             if (uriOdometer != null) {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.car_confirm), Toast.LENGTH_SHORT).show();
+
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                String carIdString = sharedPreferences.getString(getResources().getString(R.string.pref_car_key), getResources().getString(R.string.pref_car_default));
+                if (carIdString == getResources().getString(R.string.pref_car_default)){
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(getResources().getString(R.string.pref_car_key), idCarString);
+                    editor.apply();
+                }
                 finish();
-                // TODO check preferences
                 // TODO Log errors
             }
         }

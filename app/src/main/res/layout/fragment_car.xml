@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/car_container"
+    android:orientation="vertical"
+    android:padding="@dimen/container_padding"
+    android:background="@color/light_blue_100"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fragment Car"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        android:textColor="#000000"
-        android:layout_centerInParent="true"/>
+    <fragment
+        android:id="@+id/static_fragment"
+        android:name="be.maxgaj.protripbook.CarInfoFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

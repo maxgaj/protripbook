@@ -19,7 +19,8 @@
 
         <ListPreference
             android:key="@string/pref_car_key"
-            android:title="@string/pref_car_label" />
+            android:title="@string/pref_car_label"
+            android:defaultValue="@string/pref_car_default"/>
 
         <PreferenceScreen android:title="@string/pref_car_add_label">
             <intent android:action="be.maxgaj.protripbook.CarActivity" />
