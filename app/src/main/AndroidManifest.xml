@@ -50,7 +50,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".OdometerActivity"
+        <activity
+            android:name=".OdometerActivity"
             android:label="@string/odometer_activity_label"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.ActionBar">
@@ -60,11 +61,22 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name=".TripActivity"
+            android:label="@string/trip_activity_label"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.ActionBar">
+            <intent-filter>
+                <action android:name="be.maxgaj.protripbook.TripActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name=".data.ProtripBookContentProvider"
             android:authorities="be.maxgaj.protripbook"
             android:exported="false" />
+
     </application>
 
 </manifest>

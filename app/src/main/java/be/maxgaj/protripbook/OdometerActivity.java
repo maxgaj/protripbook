@@ -52,7 +52,6 @@ public class OdometerActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         this.carId = sharedPreferences.getString(getString(R.string.pref_car_key), getString(R.string.pref_car_default));
         this.unit = sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km));
-//        this.readingEditText.setHint(getString(R.string.odometer_hint_reading)+" ("+this.unit+")");
 
         Intent intent = getIntent();
         if (intent.hasExtra(OdometerFragment.INTENT_DATE))

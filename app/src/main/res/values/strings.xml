@@ -4,6 +4,8 @@
     <string name="car_activity_label">Add new car</string>
     <string name="car_edit_activity_label">Edit car</string>
     <string name="odometer_activity_label">Update odometer</string>
+    <string name="trip_activity_label">Add new trip</string>
+    <string name="trip_activity_edit_label">Edit trip</string>
 
     <string name="pref_cat_title_options">Options</string>
     <string name="pref_cat_key_options" translatable="false">options</string>
@@ -72,6 +74,30 @@
     <string name="odometer_error_date">New date must be later than the previous one.</string>
     <string name="odometer_confirm">Odometer updated</string>
     <string name="odometer_error">Impossible to update odometer</string>
+
+    <string name="trip_input_hint_from">From</string>
+    <string name="trip_input_hint_to">To</string>
+    <string name="trip_input_hint_distance">Distance</string>
+    <string name="trip_input_hint_round_true">Round trip</string>
+    <string name="trip_input_hint_round_false">Single trip</string>
+    <string name="trip_input_hint_date">Trip date</string>
+    <string name="trip_button_add">Add</string>
+    <string name="trip_button_update">Update</string>
+    <string name="trip_button_cancel">Cancel</string>
+    <string name="trip_input_error_from">Enter the starting location</string>
+    <string name="trip_input_error_to">Enter the destination</string>
+    <string name="trip_input_error_distance">Enter the total distance travelled</string>
+    <string name="trip_input_error_date">Enter the date of the trip</string>
+    <string name="trip_add_confirm">New trip added</string>
+    <string name="trip_add_error">Impossible to add trip</string>
+    <string name="trip_update_confirm">Trip updated</string>
+    <string name="trip_update_error">Impossible to update trip</string>
+
+    <string name="trip_item_edit_button">Edit</string>
+    <string name="trip_item_delete_button">Delete</string>
+    <string name="trip_delete_confirm">Trip deleted</string>
+    <string name="trip_delete_error">Impossible to delete trip</string>
+
 
 
 </resources>
