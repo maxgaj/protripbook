@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:titleTextColor="#FFFFFF"
+            app:titleTextColor="@color/white"
             app:title="@string/app_name"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_scrollFlags="scroll|enterAlways"/>
@@ -30,7 +30,7 @@
             app:tabGravity="fill"
             android:id="@+id/main_tabs"
             android:background="@color/colorPrimary"
-            app:tabTextColor="#ffffff"
+            app:tabTextColor="@color/white"
             app:tabSelectedTextColor="@color/light_green_A400"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

@@ -62,10 +62,13 @@
     <string name="car_confirm_delete_no">Cancel</string>
     <string name="car_delete_confirm">Car deleted</string>
     <string name="car_delete_error">Impossible to delete car</string>
+    <string name="no_car_error">Select a car to display or add a new car</string>
 
     <string name="car_info_edit_button">Edit</string>
-    <string name="odometer_edit_button">Update</string>
+    <string name="car_info_settings_button">Settings</string>
+    <string name="car_info_logo_cd">Car Info</string>
 
+    <string name="odometer_edit_button">Update</string>
     <string name="odometer_hint_date">reading date</string>
     <string name="odometer_hint_reading">reading</string>
     <string name="odometer_button_add">Update</string>
@@ -74,6 +77,8 @@
     <string name="odometer_error_date">New date must be later than the previous one.</string>
     <string name="odometer_confirm">Odometer updated</string>
     <string name="odometer_error">Impossible to update odometer</string>
+    <string name="odometer_title">Odometer</string>
+    <string name="odometer_logo_cd">Odometer</string>
 
     <string name="trip_input_hint_from">From</string>
     <string name="trip_input_hint_to">To</string>
@@ -95,6 +100,9 @@
 
     <string name="trip_item_edit_button">Edit</string>
     <string name="trip_item_delete_button">Delete</string>
+    <string name="trip_item_logo_cd">Trip Information</string>
+    <string name="trip_item_from">From</string>
+    <string name="trip_item_to">To</string>
     <string name="trip_delete_confirm">Trip deleted</string>
     <string name="trip_delete_error">Impossible to delete trip</string>
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -37,9 +38,10 @@ public class CarInfoFragment extends Fragment implements
     @BindView(R.id.car_info_name_value) TextView nameTextView;
     @BindView(R.id.car_info_brand_value) TextView brandTextView;
     @BindView(R.id.car_info_plate_value) TextView plateTextView;
-    @BindView(R.id.car_info_data_container) LinearLayout dataContainer;
-    @BindView(R.id.car_info_error_container) LinearLayout errorContainer;
+    @BindView(R.id.car_info_data_container) ConstraintLayout dataContainer;
+    @BindView(R.id.car_info_error_container) ConstraintLayout errorContainer;
     @BindView(R.id.car_info_edit_button) Button editButton;
+    @BindView(R.id.car_info_settings_button) Button settingsButton;
 
     public CarInfoFragment() {}
 
@@ -61,6 +63,14 @@ public class CarInfoFragment extends Fragment implements
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), CarEditActivity.class);
                 intent.putExtra(Intent.EXTRA_TEXT, carId);
+                startActivity(intent);
+            }
+        });
+
+        this.settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), SettingsActivity.class);
                 startActivity(intent);
             }
         });

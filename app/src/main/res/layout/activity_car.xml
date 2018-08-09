@@ -87,7 +87,8 @@
             android:layout_height="wrap_content"
             android:text="@string/car_button_add"
             android:background="@color/colorPrimary"
-            android:layout_marginTop="40dp"
+            android:contentDescription="@string/car_button_add"
+            android:layout_marginTop="@dimen/button_margin_top"
             android:textColor="@android:color/white"/>
 
         <Button android:id="@+id/car_btn_cancel"
@@ -95,7 +96,8 @@
             android:layout_height="wrap_content"
             android:text="@string/car_button_cancel"
             android:background="@android:color/white"
-            android:layout_marginTop="16dp"
+            android:contentDescription="@string/car_button_cancel"
+            android:layout_marginTop="@dimen/button_spacing"
             android:textColor="@color/colorPrimary"/>
 
     </LinearLayout>

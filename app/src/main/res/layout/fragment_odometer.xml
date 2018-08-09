@@ -1,53 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/odometer_container"
     android:padding="@dimen/container_padding"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/odometer_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/card_logo_margin"
+            android:layout_marginTop="@dimen/card_logo_margin"
+            android:contentDescription="@string/odometer_logo_cd"
+            android:src="@drawable/ic_library_books_black_40dp" />
 
         <TextView
-            android:id="@+id/odometer_date_label"
-            android:layout_width="match_parent"
+            android:id="@+id/odometer_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date" />
+            app:layout_constraintStart_toStartOf="@+id/odometer_logo"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/card_margin_start"
+            android:layout_marginTop="@dimen/card_title_margin_top"
+            android:textColor="@color/light_blue_700"
+            android:textSize="@dimen/title_size"
+            android:text="@string/odometer_title"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/odometer_date_value"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="..." />
-
-        <TextView
-            android:id="@+id/odometer_reading_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reading" />
+            app:layout_constraintStart_toStartOf="@+id/odometer_logo"
+            app:layout_constraintBottom_toBottomOf="@+id/odometer_logo"
+            android:layout_marginStart="@dimen/card_margin_start"
+            android:textSize="@dimen/text_size" />
 
         <TextView
             android:id="@+id/odometer_reading_value"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="..." />
+            app:layout_constraintEnd_toStartOf="@+id/odometer_unit_value"
+            android:layout_marginEnd="@dimen/text_word"
+            app:layout_constraintBottom_toBottomOf="@+id/odometer_logo"
+            android:layout_marginStart="@dimen/card_margin_start"
+            android:textSize="@dimen/title_size" />
 
         <TextView
             android:id="@+id/odometer_unit_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/odometer_logo"
+            android:layout_marginEnd="@dimen/card_margin_end"
+            android:textSize="@dimen/title_size" />
+
 
         <Button
             android:id="@+id/odometer_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
             android:text="@string/odometer_edit_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/odometer_logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="@string/odometer_edit_button"
             android:theme="@style/AppTheme.FlatButton" />
 
-    </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

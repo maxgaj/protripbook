@@ -35,7 +35,6 @@
                 android:id="@+id/trip_input_to"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#333333"
                 android:singleLine="true"
                 android:hint="@string/trip_input_hint_to" />
         </android.support.design.widget.TextInputLayout>
@@ -87,16 +86,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/trip_button_add"
+            android:contentDescription="@string/trip_button_add"
             android:background="@color/colorPrimary"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="@dimen/button_margin_top"
             android:textColor="@android:color/white"/>
 
         <Button android:id="@+id/trip_btn_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/trip_button_cancel"
+            android:contentDescription="@string/trip_button_cancel"
             android:background="@android:color/white"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/button_spacing"
             android:textColor="@color/colorPrimary"/>
 
     </LinearLayout>

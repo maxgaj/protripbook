@@ -52,8 +52,21 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         String startingLocation = this.cursor.getString(this.cursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_STARTING_LOCATION));
         String destinationLocation = this.cursor.getString(this.cursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_DESTINATION_LOCATION));
         Long distance = this.cursor.getLong(this.cursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_DISTANCE));
-        String text = "From " + startingLocation + " To " + destinationLocation + " in " + String.valueOf(distance) + " km";
-        holder.tripItemTextView.setText(text);
+        String date = this.cursor.getString(this.cursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_DATE));
+        int round = this.cursor.getInt(this.cursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_ROUND_TRIP));
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.context);
+        String unit = sharedPreferences.getString(this.context.getString(R.string.pref_unit_key), this.context.getString(R.string.pref_unit_value_km));
+
+        holder.fromTextView.setText(startingLocation);
+        holder.toTextView.setText(destinationLocation);
+        holder.readingTextView.setText(String.valueOf(distance));
+        holder.dateTextView.setText(date);
+        holder.unitTextView.setText(unit);
+        if (round==1)
+            holder.roundTextView.setText(this.context.getString(R.string.trip_input_hint_round_true));
+        else
+            holder.roundTextView.setText(this.context.getString(R.string.trip_input_hint_round_false));
+
     }
 
 
@@ -101,7 +114,12 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
 
 
     class TripViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.trip_item_tv) TextView tripItemTextView;
+        @BindView(R.id.trip_item_from) TextView fromTextView;
+        @BindView(R.id.trip_item_to) TextView toTextView;
+        @BindView(R.id.trip_item_date) TextView dateTextView;
+        @BindView(R.id.trip_item_round) TextView roundTextView;
+        @BindView(R.id.trip_item_reading) TextView readingTextView;
+        @BindView(R.id.trip_item_unit) TextView unitTextView;
         @BindView(R.id.trip_item_edit_button) Button editButton;
         @BindView(R.id.trip_item_delete_button) Button deleteButton;
 

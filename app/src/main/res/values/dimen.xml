@@ -4,9 +4,21 @@
     <dimen name="card_padding">16dp</dimen>
     <dimen name="form_padding">16dp</dimen>
     <dimen name="card_bottom_padding">8dp</dimen>
-    <dimen name="error_min_height">160dp</dimen>
     <dimen name="fragment_padding">8dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="switch_margin">16dp</dimen>
     <dimen name="switch_text_size">16sp</dimen>
+    <dimen name="title_size">16sp</dimen>
+    <dimen name="text_size">14sp</dimen>
+    <dimen name="line_spacing">8dp</dimen>
+    <dimen name="text_space">16dp</dimen>
+    <dimen name="label_space">40dp</dimen>
+    <dimen name="text_word">4dp</dimen>
+    <dimen name="card_logo_margin">16dp</dimen>
+    <dimen name="card_margin_start">72dp</dimen>
+    <dimen name="card_margin_end">16dp</dimen>
+    <dimen name="card_title_margin_top">16dp</dimen>
+    <dimen name="error_max_width">160dp</dimen>
+    <dimen name="button_margin_top">40dp</dimen>
+    <dimen name="button_spacing">16dp</dimen>
 </resources>

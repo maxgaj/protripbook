@@ -56,24 +56,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/car_button_update"
+            android:contentDescription="@string/car_button_update"
             android:background="@color/colorPrimary"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="@dimen/button_margin_top"
             android:textColor="@android:color/white"/>
 
         <Button android:id="@+id/car_btn_cancel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/car_button_cancel"
+            android:contentDescription="@string/car_button_cancel"
             android:background="@android:color/white"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/button_spacing"
             android:textColor="@color/colorPrimary"/>
 
         <Button android:id="@+id/car_btn_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/car_button_delete"
+            android:contentDescription="@string/car_button_delete"
             android:background="@color/colorAccent"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/button_spacing"
             android:textColor="@android:color/white"/>
 
     </LinearLayout>
