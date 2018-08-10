@@ -9,12 +9,12 @@ public class Trip {
     private String startingLocation;
     private String destinationLocation;
     private boolean roundTrip;
-    private Long distance;
-    private Date date;
+    private float distance;
+    private String date;
 
     public Trip(){}
 
-    public Trip(int id, int idCar, String startingLocation, String destinationLocation, boolean roundTrip, Long distance, Date date){
+    public Trip(int id, int idCar, String startingLocation, String destinationLocation, boolean roundTrip, float distance, String date){
         this.id = id;
         this.idCar = idCar;
         this.startingLocation = startingLocation;
@@ -64,19 +64,19 @@ public class Trip {
         this.roundTrip = roundTrip;
     }
 
-    public Long getDistance() {
+    public float getDistance() {
         return distance;
     }
 
-    public void setDistance(Long distance) {
+    public void setDistance(float distance) {
         this.distance = distance;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

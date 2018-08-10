@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/report_container"
+    android:padding="@dimen/container_padding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/report_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/card_logo_margin"
+            android:layout_marginTop="@dimen/card_logo_margin"
+            android:contentDescription="@string/report_logo_title"
+            android:src="@drawable/ic_insert_chart_black_40dp" />
+
+        <TextView
+            android:id="@+id/report_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/report_logo"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/card_margin_start"
+            android:layout_marginTop="@dimen/card_title_margin_top"
+            android:textColor="@color/light_blue_700"
+            android:textSize="@dimen/title_size"
+            android:text="@string/report_logo_title"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/report_from_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/report_logo"
+            app:layout_constraintBottom_toBottomOf="@+id/report_logo"
+            android:layout_marginStart="@dimen/card_margin_start"
+            android:text="@string/report_from_label"
+            android:textColor="@color/light_blue_700"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/report_from"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/report_from_label"
+            app:layout_constraintBottom_toBottomOf="@+id/report_logo"
+            android:layout_marginStart="@dimen/text_word"
+            android:text="00/00/0000"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/report_to_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/report_from"
+            app:layout_constraintBottom_toBottomOf="@+id/report_logo"
+            android:layout_marginStart="@dimen/text_word"
+            android:text="@string/report_to_label"
+            android:textColor="@color/light_blue_700"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/report_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/report_to_label"
+            app:layout_constraintBottom_toBottomOf="@+id/report_logo"
+            android:layout_marginStart="@dimen/text_word"
+            android:text="00/00/0000"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/report_trip_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/report_logo"
+            android:layout_marginStart="@dimen/card_logo_margin"
+            android:layout_marginTop="@dimen/line_spacing"
+            android:textColor="@color/light_blue_700"
+            android:text="@string/report_trip_label"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/report_trip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/report_trip_label"
+            android:layout_marginStart="@dimen/card_logo_margin"
+            android:layout_marginTop="@dimen/text_word"
+            android:text="00000.0"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/report_trip_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/report_trip"
+            app:layout_constraintTop_toBottomOf="@+id/report_trip_label"
+            android:layout_marginStart="@dimen/text_word"
+            android:layout_marginTop="@dimen/text_word"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/report_odometer_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/report_trip"
+            android:layout_marginStart="@dimen/card_logo_margin"
+            android:layout_marginTop="@dimen/line_spacing"
+            android:textColor="@color/light_blue_700"
+            android:text="@string/report_odometer_label"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/report_odometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/report_odometer_label"
+            android:layout_marginStart="@dimen/card_logo_margin"
+            android:layout_marginTop="@dimen/text_word"
+            android:text="00000.0"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/report_odometer_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/report_odometer"
+            app:layout_constraintTop_toBottomOf="@+id/report_odometer_label"
+            android:layout_marginStart="@dimen/text_word"
+            android:layout_marginTop="@dimen/text_word"
+            android:textSize="@dimen/text_size" />
+
+
+        <TextView
+            android:id="@+id/report_ratio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/report_ratio_unit"
+            app:layout_constraintBottom_toBottomOf="@+id/report_odometer"
+            android:layout_marginEnd="@dimen/text_word"
+            android:text="00"
+            android:textColor="@color/light_blue_700"
+            android:textSize="@dimen/ratio_text_size" />
+
+
+        <TextView
+            android:id="@+id/report_ratio_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/report_odometer"
+            android:layout_marginEnd="@dimen/card_logo_margin"
+            android:text="@string/report_ratio_unit"
+            android:textColor="@color/light_blue_700"
+            android:textSize="@dimen/ratio_text_size" />
+
+        <Button
+            android:id="@+id/report_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/report_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/report_ratio_unit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="@string/report_button"
+            android:theme="@style/AppTheme.FlatButton" />
+
+
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

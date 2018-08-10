@@ -21,4 +21,5 @@
     <dimen name="error_max_width">160dp</dimen>
     <dimen name="button_margin_top">40dp</dimen>
     <dimen name="button_spacing">16dp</dimen>
+    <dimen name="ratio_text_size">40sp</dimen>
 </resources>

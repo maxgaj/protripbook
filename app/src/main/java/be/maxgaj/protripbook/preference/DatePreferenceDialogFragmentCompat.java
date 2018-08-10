@@ -25,9 +25,19 @@ public class DatePreferenceDialogFragmentCompat extends PreferenceDialogFragment
     public void onDialogClosed(boolean positiveResult) {
         if (positiveResult){
             int day = this.datePicker.getDayOfMonth();
-            int month = this.datePicker.getMonth();
+            int month = this.datePicker.getMonth()+1;
             int year = this.datePicker.getYear();
-            String dateval = String.valueOf(day)+"/"+String.valueOf(month)+"/"+String.valueOf(year);
+            String dayString;
+            String monthString;
+            if (day<10)
+                dayString = "0"+String.valueOf(day);
+            else
+                dayString = String.valueOf(day);
+            if (month<10)
+                monthString = "0"+String.valueOf(month);
+            else
+                monthString = String.valueOf(month);
+            String dateval = dayString+"/"+monthString+"/"+String.valueOf(year);
             DialogPreference preference = getPreference();
             if (preference instanceof DatePreference){
                 DatePreference datePreference = ((DatePreference) preference);
@@ -49,7 +59,7 @@ public class DatePreferenceDialogFragmentCompat extends PreferenceDialogFragment
         }
         if (dateval != null){
             int day = getDay(dateval);
-            int month = getMonth(dateval);
+            int month = getMonth(dateval)-1;
             int year = getYear(dateval);
             this.datePicker.updateDate(year, month, day);
         }
