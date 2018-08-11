@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="be.maxgaj.protripbook">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/GOOGLE_API" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop">
@@ -61,12 +70,22 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".TripActivity"
+        <activity
+            android:name=".TripActivity"
             android:label="@string/trip_activity_label"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.ActionBar">
             <intent-filter>
                 <action android:name="be.maxgaj.protripbook.TripActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".drive.GenerateReportActivity"
+            android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="be.maxgaj.protripbook.drive.GenerateReportActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -77,6 +96,7 @@
             android:authorities="be.maxgaj.protripbook"
             android:exported="false" />
 
+        <activity android:name=".drive.BaseDriveActivity"></activity>
     </application>
 
 </manifest>

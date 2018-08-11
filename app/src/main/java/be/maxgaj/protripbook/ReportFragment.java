@@ -1,8 +1,6 @@
 package be.maxgaj.protripbook;
 
-
-import android.app.Application;
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -20,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,6 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import be.maxgaj.protripbook.data.ProtripBookContract;
+import be.maxgaj.protripbook.drive.GenerateReportActivity;
 import be.maxgaj.protripbook.models.Report;
 import be.maxgaj.protripbook.models.Trip;
 import butterknife.BindView;
@@ -42,6 +40,7 @@ public class ReportFragment extends Fragment implements
     private String firstPrefDate;
     private boolean isLastDate;
     private String lastPrefDate;
+    private String unit;
 
     @BindView(R.id.report_from) TextView fromTextView;
     @BindView(R.id.report_to) TextView toTextView;
@@ -55,7 +54,8 @@ public class ReportFragment extends Fragment implements
 
     private static final String TAG = ReportFragment.class.getSimpleName();
     private static final int REPORT_LOADING_ID = 60;
-;
+    public static final String REPORT_EXTRA = "reportExtra";
+
     public ReportFragment() {}
 
     @Override
@@ -77,9 +77,11 @@ public class ReportFragment extends Fragment implements
         ButterKnife.bind(this, view);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        this.tripUnitTextView.setText(sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km)));
-        this.odometerUnitTextView.setText(sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km)));
+        this.unit = sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km));
+        this.tripUnitTextView.setText(this.unit);
+        this.odometerUnitTextView.setText(this.unit);
 
+        this.reportButton.setEnabled(false);
         this.reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +127,9 @@ public class ReportFragment extends Fragment implements
     }
 
     private void generateFileReport(){
-        // TODO generate file report
+        Intent intent = new Intent(getContext(), GenerateReportActivity.class);
+        intent.putExtra(REPORT_EXTRA, this.report);
+        startActivity(intent);
     }
 
     private void restartLoaders(){
@@ -135,8 +139,9 @@ public class ReportFragment extends Fragment implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_unit_key))){
-            this.tripUnitTextView.setText(sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km)));
-            this.odometerUnitTextView.setText(sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km)));
+            this.unit = sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km));
+            this.tripUnitTextView.setText(this.unit);
+            this.odometerUnitTextView.setText(this.unit);
         }
         else if (key.equals(getString(R.string.pref_car_key))){
             this.carId = sharedPreferences.getString(key, getResources().getString(R.string.pref_car_default));
@@ -268,7 +273,7 @@ public class ReportFragment extends Fragment implements
                 List<Trip> tripList = new ArrayList<>();
                 float tripDistance = 0;
                 if (tripCursor == null)
-                    return new Report(firstDate, lastDate, tripDistance, odometerDistance, tripList);
+                    return new Report(firstDate, lastDate, tripDistance, odometerDistance, tripList, unit);
                 while (tripCursor.moveToNext()){
                     String tripDateString = tripCursor.getString(tripCursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_DATE));
                     Date tripDate;
@@ -296,7 +301,7 @@ public class ReportFragment extends Fragment implements
                     }
                 }
 
-                return new Report(firstDate, lastDate, tripDistance, odometerDistance, tripList);
+                return new Report(firstDate, lastDate, tripDistance, odometerDistance, tripList, unit);
             }
 
             @Override
@@ -316,6 +321,7 @@ public class ReportFragment extends Fragment implements
             this.odometerTextView.setText(String.valueOf(data.getOdometerDistance()));
             this.tripTextView.setText(String.valueOf(data.getTripDistance()));
             this.ratioTextView.setText(String.valueOf(data.getRatio()));
+            this.reportButton.setEnabled(true);
         } else {
             Log.d(TAG, "onLoadFinished: Impossible to retrieve report");
         }
@@ -324,6 +330,7 @@ public class ReportFragment extends Fragment implements
     @Override
     public void onLoaderReset(@NonNull Loader<Report> loader) {
         this.report = null;
+        this.reportButton.setEnabled(false);
     }
 
 }

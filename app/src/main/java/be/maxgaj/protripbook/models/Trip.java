@@ -1,8 +1,9 @@
 package be.maxgaj.protripbook.models;
 
-import java.util.Date;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Trip {
+public class Trip implements Parcelable {
 
     private int id;
     private int idCar;
@@ -22,6 +23,32 @@ public class Trip {
         this.roundTrip = roundTrip;
         this.distance = distance;
         this.date = date;
+    }
+
+    private Trip(Parcel in){
+        this.id = in.readInt();
+        this.idCar = in.readInt();
+        this.startingLocation = in.readString();
+        this.destinationLocation = in.readString();
+        this.roundTrip = in.readByte() != 0;
+        this.distance = in.readFloat();
+        this.date = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeInt(this.idCar);
+        dest.writeString(this.startingLocation);
+        dest.writeString(this.destinationLocation);
+        dest.writeByte((byte) (this.roundTrip ? 1 : 0));
+        dest.writeFloat(this.distance);
+        dest.writeString(this.date);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public int getId() {
@@ -79,4 +106,18 @@ public class Trip {
     public void setDate(String date) {
         this.date = date;
     }
+
+    public static final Parcelable.Creator<Trip> CREATOR
+            = new Parcelable.Creator<Trip>() {
+
+        @Override
+        public Trip createFromParcel(Parcel in) {
+            return new Trip(in);
+        }
+
+        @Override
+        public Trip[] newArray(int size) {
+            return new Trip[size];
+        }
+    };
 }
