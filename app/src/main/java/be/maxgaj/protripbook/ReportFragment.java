@@ -26,8 +26,11 @@ import java.util.List;
 
 import be.maxgaj.protripbook.data.ProtripBookContract;
 import be.maxgaj.protripbook.drive.GenerateReportActivity;
+import be.maxgaj.protripbook.models.ParsedOdometer;
+import be.maxgaj.protripbook.models.ParsedTrip;
 import be.maxgaj.protripbook.models.Report;
 import be.maxgaj.protripbook.models.Trip;
+import be.maxgaj.protripbook.utils.ReportUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -188,16 +191,6 @@ public class ReportFragment extends Fragment implements
             @Nullable
             @Override
             public Report loadInBackground() {
-                Date fPDate;
-                Date lPDate;
-                try {
-                    fPDate = new SimpleDateFormat(getString(R.string.date_pattern)).parse(firstPrefDate);
-                    lPDate = new SimpleDateFormat(getString(R.string.date_pattern)).parse(lastPrefDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-
                 Cursor odometerCursor;
                 try {
                     odometerCursor = getContext().getContentResolver().query(ProtripBookContract.OdometerEntry.CONTENT_URI,
@@ -211,41 +204,16 @@ public class ReportFragment extends Fragment implements
                     return null;
                 }
 
-                if (odometerCursor==null || odometerCursor.getCount()<1){
-                    Log.d(TAG, "loadInBackground: Odometer cursor empty");
+                ParsedOdometer parsedOdometer;
+                try {
+                    parsedOdometer = ReportUtils.parseOdometerCursor(getContext(), odometerCursor, firstPrefDate, lastPrefDate, isFirstDate, isLastDate);
+                } catch (RuntimeException e){
+                    Log.e(TAG, "loadInBackground: "+e.getMessage());
                     return null;
                 }
-                String firstDate=null;
-                String lastDate=null;
-                float firstDistance=-1;
-                float lastDistance=0;
-                while (odometerCursor.moveToNext()){
-                    String dateString = odometerCursor.getString(odometerCursor.getColumnIndex(ProtripBookContract.OdometerEntry.COLUMN_DATE));
-                    Date odometerDate;
-                    try {
-                        odometerDate = new SimpleDateFormat(getString(R.string.date_pattern)).parse(dateString);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-                    if ((isFirstDate && isLastDate) ||
-                            (!isFirstDate && isLastDate && (fPDate.before(odometerDate) || fPDate.equals(odometerDate))) ||
-                            (isFirstDate && !isLastDate && (lPDate.after(odometerDate) || lPDate.equals(odometerDate))) ||
-                            (!isFirstDate && !isLastDate && (fPDate.before(odometerDate) || fPDate.equals(odometerDate)) && (lPDate.after(odometerDate) || lPDate.equals(odometerDate)))){
-                        if (firstDate==null)
-                            firstDate=dateString;
-                        lastDate=dateString;
-                        if (firstDistance==-1)
-                            firstDistance=odometerCursor.getFloat(odometerCursor.getColumnIndex(ProtripBookContract.OdometerEntry.COLUMN_READING));
-                        lastDistance=odometerCursor.getFloat(odometerCursor.getColumnIndex(ProtripBookContract.OdometerEntry.COLUMN_READING));
-                    }
-                }
-                if (firstDate==null || lastDate==null)
-                    return null;
-
-                float odometerDistance=0;
-                if (lastDistance >= firstDistance)
-                    odometerDistance=lastDistance-firstDistance;
+                String firstDate = parsedOdometer.getFirstDate();
+                String lastDate = parsedOdometer.getLastDate();
+                float odometerDistance = parsedOdometer.getDistance();
 
                 Cursor tripCursor;
                 try {
@@ -260,46 +228,15 @@ public class ReportFragment extends Fragment implements
                     return null;
                 }
 
-                Date tripFirstDate;
-                Date tripLastDate;
+                ParsedTrip parsedTrip;
                 try {
-                    tripFirstDate = new SimpleDateFormat(getString(R.string.date_pattern)).parse(firstDate);
-                    tripLastDate = new SimpleDateFormat(getString(R.string.date_pattern)).parse(lastDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    parsedTrip = ReportUtils.parseTripCursor(getContext(), tripCursor, firstDate, lastDate, isFirstDate, isLastDate);
+                } catch (RuntimeException e){
+                    Log.e(TAG, "loadInBackground: "+e.getMessage());
                     return null;
                 }
-
-                List<Trip> tripList = new ArrayList<>();
-                float tripDistance = 0;
-                if (tripCursor == null)
-                    return new Report(firstDate, lastDate, tripDistance, odometerDistance, tripList, unit);
-                while (tripCursor.moveToNext()){
-                    String tripDateString = tripCursor.getString(tripCursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_DATE));
-                    Date tripDate;
-                    try {
-                        tripDate = new SimpleDateFormat(getString(R.string.date_pattern)).parse(tripDateString);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                        return null;
-                    }
-
-                    if ((isFirstDate && isLastDate) ||
-                            (!isFirstDate && isLastDate && (tripFirstDate.before(tripDate) || tripFirstDate.equals(tripDate))) ||
-                            (isFirstDate && !isLastDate && (tripLastDate.after(tripDate) || tripLastDate.equals(tripDate))) ||
-                            (!isFirstDate && !isLastDate && (tripFirstDate.before(tripDate) || tripFirstDate.equals(tripDate)) && (tripLastDate.after(tripDate) || tripLastDate.equals(tripDate)))){
-                        tripDistance += tripCursor.getFloat(tripCursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_DISTANCE));
-                        tripList.add(new Trip(
-                                tripCursor.getInt(tripCursor.getColumnIndex(ProtripBookContract.TripEntry._ID)),
-                                tripCursor.getInt(tripCursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_CAR)),
-                                tripCursor.getString(tripCursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_STARTING_LOCATION)),
-                                tripCursor.getString(tripCursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_DESTINATION_LOCATION)),
-                                tripCursor.getInt(tripCursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_ROUND_TRIP))==1,
-                                tripCursor.getFloat(tripCursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_DISTANCE)),
-                                tripCursor.getString(tripCursor.getColumnIndex(ProtripBookContract.TripEntry.COLUMN_DATE))
-                        ));
-                    }
-                }
+                float tripDistance = parsedTrip.getTripDistance();
+                List<Trip> tripList = parsedTrip.getTripList();
 
                 return new Report(firstDate, lastDate, tripDistance, odometerDistance, tripList, unit);
             }
@@ -323,6 +260,12 @@ public class ReportFragment extends Fragment implements
             this.ratioTextView.setText(String.valueOf(data.getRatio()));
             this.reportButton.setEnabled(true);
         } else {
+            this.fromTextView.setText("");
+            this.toTextView.setText("");
+            this.odometerTextView.setText("");
+            this.tripTextView.setText("");
+            this.ratioTextView.setText("");
+            this.reportButton.setEnabled(false);
             Log.d(TAG, "onLoadFinished: Impossible to retrieve report");
         }
     }

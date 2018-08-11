@@ -26,7 +26,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import be.maxgaj.protripbook.data.ProtripBookContract;
-import be.maxgaj.protripbook.models.Odometer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
