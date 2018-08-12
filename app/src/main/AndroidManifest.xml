@@ -3,6 +3,8 @@
     package="be.maxgaj.protripbook">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
 
     <application
         android:allowBackup="true"
@@ -96,7 +98,19 @@
             android:authorities="be.maxgaj.protripbook"
             android:exported="false" />
 
-        <activity android:name=".drive.BaseDriveActivity"></activity>
+        <receiver android:name=".ProtripBookWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/protrip_book_widget_info" />
+        </receiver>
+
+        <service android:name=".ProtripBookWidgetService"/>
+        <service android:name=".FetchAddressIntentService"
+            android:exported="false" />
     </application>
 
 </manifest>

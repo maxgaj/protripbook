@@ -136,6 +136,7 @@ public class CarActivity extends AppCompatActivity {
                     editor.putString(getResources().getString(R.string.pref_car_key), idCarString);
                     editor.apply();
                 }
+                ProtripBookWidgetService.startActionReport(this);
                 finish();
                 // TODO Log errors
             }

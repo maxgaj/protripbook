@@ -132,6 +132,7 @@ public class CarInfoFragment extends Fragment implements
                 getLoaderManager().restartLoader(CAR_INFO_LOADER_ID, null, this);
             }
         }
+        ProtripBookWidgetService.startActionReport(getActivity());
     }
 
     @NonNull

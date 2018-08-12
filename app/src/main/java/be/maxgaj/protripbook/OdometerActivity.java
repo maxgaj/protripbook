@@ -117,6 +117,7 @@ public class OdometerActivity extends AppCompatActivity {
         try {
             getContentResolver().insert(ProtripBookContract.OdometerEntry.CONTENT_URI, cvOdometer);
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.odometer_confirm), Toast.LENGTH_SHORT).show();
+            ProtripBookWidgetService.startActionReport(this);
             finish();
         } catch (Exception e){
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.odometer_error), Toast.LENGTH_SHORT).show();

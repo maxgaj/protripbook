@@ -94,6 +94,7 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.TripViewHolder
         try{
             this.context.getContentResolver().delete(uri, null, null);
             Toast.makeText(this.context, this.context.getResources().getString(R.string.trip_delete_confirm), Toast.LENGTH_SHORT).show();
+            ProtripBookWidgetService.startActionReport(context);
             this.notifyDataSetChanged();
         } catch (Exception e){
             Toast.makeText(this.context, this.context.getResources().getString(R.string.trip_delete_error), Toast.LENGTH_SHORT).show();

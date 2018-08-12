@@ -107,6 +107,7 @@ public class CarEditActivity extends AppCompatActivity implements
             int rowsUpdateted = getContentResolver().update(uriUpdate, cv, null, null);
             if (rowsUpdateted > 0) {
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.car_edit_confirm), Toast.LENGTH_SHORT).show();
+                ProtripBookWidgetService.startActionReport(this);
                 finish();
             }
         } catch (Exception e) {
@@ -136,6 +137,7 @@ public class CarEditActivity extends AppCompatActivity implements
                                     editor.putString(getResources().getString(R.string.pref_car_key), getResources().getString(R.string.pref_car_default));
                                     editor.apply();
                                 }
+                                ProtripBookWidgetService.startActionReport(getApplicationContext());
                                 finish();
                             }
                         } catch (Exception e){

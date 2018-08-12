@@ -257,7 +257,7 @@ public class ReportFragment extends Fragment implements
             this.toTextView.setText(data.getLastDate());
             this.odometerTextView.setText(String.valueOf(data.getOdometerDistance()));
             this.tripTextView.setText(String.valueOf(data.getTripDistance()));
-            this.ratioTextView.setText(String.valueOf(data.getRatio()));
+            this.ratioTextView.setText(String.format("%.1f", data.getRatio()));
             this.reportButton.setEnabled(true);
         } else {
             this.fromTextView.setText("");

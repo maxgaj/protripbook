@@ -105,6 +105,7 @@
 
     <string name="trip_item_edit_button">Edit</string>
     <string name="trip_item_delete_button">Delete</string>
+    <string name="trip_switch_button">Switch Locations</string>
     <string name="trip_item_logo_cd">Trip Information</string>
     <string name="trip_item_from">From</string>
     <string name="trip_item_to">To</string>
@@ -124,13 +125,22 @@
     <string name="file_created">Created file: %1$s.</string>
     <string name="file_create_error">Error while trying to create the file.</string>
 
-    <string name="report_util_error_pref_date">Error parsing preference dates</string>
-    <string name="report_util_error_odometer_cursor">Odometer cursor empty</string>
-    <string name="report_util_error_odometer_date">Error parsing odometer date</string>
-    <string name="report_util_error_odometer">Error retrieving odometer dates</string>
-    <string name="report_util_error_limit_date">Error parsing limit dates</string>
-    <string name="report_util_error_trip_cursor">Trip cursor empty</string>
-    <string name="report_util_error_trip_date">Error parsing trip dates</string>
+    <string name="report_util_error_pref_date" translatable="false">Error parsing preference dates</string>
+    <string name="report_util_error_odometer_cursor" translatable="false">Odometer cursor empty</string>
+    <string name="report_util_error_odometer_date" translatable="false">Error parsing odometer date</string>
+    <string name="report_util_error_odometer" translatable="false">Error retrieving odometer dates</string>
+    <string name="report_util_error_limit_date" translatable="false">Error parsing limit dates</string>
+    <string name="report_util_error_trip_cursor" translatable="false">Trip cursor empty</string>
+    <string name="report_util_error_trip_date" translatable="false">Error parsing trip dates</string>
+
+    <string name="address_error_service_not_available" translatable="false">Location service not available</string>
+    <string name="address_error_invalid_lat_long" translatable="false">Invalid latitude or longitude</string>
+    <string name="address_error_no_address_found" translatable="false">Address not found</string>
+    <string name="address_info_address_found" translatable="false">Address found</string>
+    <string name="address_error_no_geocoder_available">No geocoder available</string>
+
+    <string name="widget_add_button">Add trip</string>
+
 
 
 </resources>

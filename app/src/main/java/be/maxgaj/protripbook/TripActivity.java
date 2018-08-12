@@ -5,14 +5,22 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +34,10 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,6 +55,11 @@ public class TripActivity extends AppCompatActivity implements
     private String tripId;
     private String mode;
 
+    private FusedLocationProviderClient fusedLocationClient;
+    private Location lastKnowLocation;
+    private String addressOutput;
+    private ResultReceiver resultReceiver;
+
     private static final String EDIT = "edit";
     private static final String CREATE = "create";
     private static final String TAG = TripActivity.class.getSimpleName();
@@ -59,6 +76,7 @@ public class TripActivity extends AppCompatActivity implements
     @BindView(R.id.trip_input_date) EditText dateEditText;
     @BindView(R.id.trip_btn_add) Button addButton;
     @BindView(R.id.trip_btn_cancel) Button cancelButton;
+    @BindView(R.id.trip_switch_button) Button switchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +134,14 @@ public class TripActivity extends AppCompatActivity implements
             }
         });
 
+        /* Switch button */
+        this.switchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchLocation();
+            }
+        });
+
         /* Cancel button */
         this.cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,12 +158,56 @@ public class TripActivity extends AppCompatActivity implements
             }
         });
 
+        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        this.resultReceiver = new AddressResultReceiver(new Handler());
+
+        if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  }, FetchAddressIntentService.MY_PERMISSION_ACCESS_LOCATION );
+        }
+
+
         if(this.mode.equals(EDIT)){
             this.addButton.setText(R.string.trip_button_update);
             getSupportActionBar().setTitle(R.string.trip_activity_edit_label);
             getSupportLoaderManager().initLoader(TRIP_EDIT_LOADER_ID, null, this);
         }
+        else {
+            if ( Build.VERSION.SDK_INT >= 23 &&
+                    ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+                Log.e(TAG, "onCreate: No Permission");
+            }
+            this.fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            Log.e(TAG, "onSuccess: ");
+                            lastKnowLocation = location;
+                            if (lastKnowLocation == null)
+                                return;
+                            if (!Geocoder.isPresent()){
+                                Toast.makeText(TripActivity.this,
+                                        R.string.address_error_no_geocoder_available,
+                                        Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            Log.e(TAG, "onSuccess: "+lastKnowLocation.getLatitude() );
+                            startFetchAddressIntentService();
+                        }
+                    });
+        }
     }
+
+    protected void startFetchAddressIntentService(){
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(FetchAddressIntentService.RECEIVER, this.resultReceiver);
+        intent.putExtra(FetchAddressIntentService.LOCATION_DATA_EXTRA, this.lastKnowLocation);
+        startService(intent);
+    }
+
+    protected void displayAddressOutput(){
+        this.fromEditText.setText(this.addressOutput);
+    }
+
 
     private void submitForm(){
         if (!validateFrom() || !validateTo() || !validateDistance() || !validateDate())
@@ -163,6 +233,7 @@ public class TripActivity extends AppCompatActivity implements
                     Uri uri = ContentUris.withAppendedId(ProtripBookContract.TripEntry.CONTENT_URI, Long.parseLong(tripId));
                     getContentResolver().update(uri, cv, null, null);
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.trip_update_confirm), Toast.LENGTH_SHORT).show();
+                    ProtripBookWidgetService.startActionReport(this);
                     finish();
                 } catch (Exception e){
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.trip_update_error), Toast.LENGTH_SHORT).show();
@@ -174,6 +245,7 @@ public class TripActivity extends AppCompatActivity implements
                 try {
                     getContentResolver().insert(ProtripBookContract.TripEntry.CONTENT_URI, cv);
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.trip_add_confirm), Toast.LENGTH_SHORT).show();
+                    ProtripBookWidgetService.startActionReport(this);
                     finish();
                 } catch (Exception e){
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.trip_add_error), Toast.LENGTH_SHORT).show();
@@ -182,6 +254,13 @@ public class TripActivity extends AppCompatActivity implements
                 }
                 break;
         }
+    }
+
+    private void switchLocation(){
+        String start = this.fromEditText.getText().toString();
+        this.fromEditText.setText(this.toEditText.getText());
+        this.toEditText.setText(start);
+
     }
 
     private boolean validateFrom(){
@@ -342,6 +421,23 @@ public class TripActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler){
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            if (resultData == null)
+                return;
+            addressOutput = resultData.getString(FetchAddressIntentService.RESULT_DATA_KEY);
+            if (addressOutput == null){
+                addressOutput="";
+            }
+            displayAddressOutput();
+        }
     }
 
 
