@@ -106,6 +106,7 @@
     <string name="trip_item_edit_button">Edit</string>
     <string name="trip_item_delete_button">Delete</string>
     <string name="trip_switch_button">Switch Locations</string>
+    <string name="trip_calculate_button">Calculate distance</string>
     <string name="trip_item_logo_cd">Trip Information</string>
     <string name="trip_item_from">From</string>
     <string name="trip_item_to">To</string>
@@ -140,6 +141,10 @@
     <string name="address_error_no_geocoder_available">No geocoder available</string>
 
     <string name="widget_add_button">Add trip</string>
+
+    <string name="distance_imperial" translatable="false">imperial</string>
+    <string name="distance_metric" translatable="false">metric</string>
+    <string name="distance_ok" translatable="false">OK</string>
 
 
 

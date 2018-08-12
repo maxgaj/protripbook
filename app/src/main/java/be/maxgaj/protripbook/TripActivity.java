@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -39,12 +40,16 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 import be.maxgaj.protripbook.data.ProtripBookContract;
+import be.maxgaj.protripbook.utils.DistanceUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -52,6 +57,7 @@ public class TripActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
     private Calendar calendar;
     private String carId;
+    private String unit;
     private String tripId;
     private String mode;
 
@@ -77,6 +83,7 @@ public class TripActivity extends AppCompatActivity implements
     @BindView(R.id.trip_btn_add) Button addButton;
     @BindView(R.id.trip_btn_cancel) Button cancelButton;
     @BindView(R.id.trip_switch_button) Button switchButton;
+    @BindView(R.id.trip_calculate_button) Button calculateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +102,7 @@ public class TripActivity extends AppCompatActivity implements
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         this.carId = sharedPreferences.getString(getString(R.string.pref_car_key), getString(R.string.pref_car_default));
+        this.unit = sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km));
 
         this.fromEditText.addTextChangedListener(new TextListener(this.fromEditText));
         this.toEditText.addTextChangedListener(new TextListener(this.toEditText));
@@ -139,6 +147,14 @@ public class TripActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 switchLocation();
+            }
+        });
+
+        /* Calculate button */
+        this.calculateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calculateDistance();
             }
         });
 
@@ -261,6 +277,26 @@ public class TripActivity extends AppCompatActivity implements
         this.fromEditText.setText(this.toEditText.getText());
         this.toEditText.setText(start);
 
+    }
+
+    private void calculateDistance(){
+        String unitQuery = (this.unit.equals(getString(R.string.pref_unit_value_mi)))?getString(R.string.distance_imperial):getString(R.string.distance_metric);
+        String origin = this.fromEditText.getText().toString();
+        String destination = this.toEditText.getText().toString();
+
+        URL url = DistanceUtils.buildURL(unitQuery, origin, destination);
+        if (url!=null){
+            new DistanceQueryTask().execute(url);
+
+        }
+    }
+
+    private void updateDistance(int distInt){
+        float dist = (float) distInt/1000;
+        if (this.roundSwitch.isChecked()){
+            dist*=2;
+        }
+        this.distanceEditText.setText(String.format("%.1f",dist).replace(',', '.'));
     }
 
     private boolean validateFrom(){
@@ -440,5 +476,33 @@ public class TripActivity extends AppCompatActivity implements
         }
     }
 
+    public class DistanceQueryTask extends AsyncTask<URL, Void, String> {
+        @Override
+        protected String doInBackground(URL... urls) {
+            URL url = urls[0];
+            String distanceJSON = null;
+            try {
+                distanceJSON = DistanceUtils.getResponseFromHttpUrl(url);
+            } catch (IOException e) {
+                Log.e(TAG, "doInBackground: ", e);
+            }
+            return distanceJSON;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (s!=null && !s.equals("")){
+                String status = DistanceUtils.getStatusFromJSON(s);
+                if (status!=null) {
+                    if (!status.equals(getString(R.string.distance_ok))) {
+                        Log.e(TAG, "onPostExecute: Failed to fetch distance, status="+status);
+                    }
+                    else {
+                            updateDistance(DistanceUtils.getDistanceFromJSON(s));
+                    }
+                }
+            }
+        }
+    }
 
 }

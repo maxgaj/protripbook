@@ -74,6 +74,14 @@
                 android:hint="@string/trip_input_hint_distance" />
         </android.support.design.widget.TextInputLayout>
 
+        <Button
+            android:id="@+id/trip_calculate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trip_calculate_button"
+            android:contentDescription="@string/trip_calculate_button"
+            android:theme="@style/AppTheme.FlatButton" />
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/trip_input_layout_date"
             android:layout_width="match_parent"
