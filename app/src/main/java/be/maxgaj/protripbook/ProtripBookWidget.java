@@ -8,9 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
-/**
- * Implementation of App Widget functionality.
- */
 public class ProtripBookWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, String[] widgetData, int appWidgetId) {
@@ -28,14 +25,11 @@ public class ProtripBookWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.widget_name_value, widgetData[0]);
         views.setTextViewText(R.id.widget_ratio, widgetData[1]);
 
-
-        // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
         ProtripBookWidgetService.startActionReport(context);
     }
 
@@ -47,12 +41,12 @@ public class ProtripBookWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
+
     }
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
+
     }
 }
 

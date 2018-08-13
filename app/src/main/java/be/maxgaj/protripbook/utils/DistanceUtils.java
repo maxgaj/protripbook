@@ -1,10 +1,7 @@
 package be.maxgaj.protripbook.utils;
 
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,14 +14,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-import be.maxgaj.protripbook.R;
 
 public class DistanceUtils {
     private static String DISTANCE_BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/json";
     private static String PARAM_UNITS = "units";
     private static String PARAM_ORIGIN = "origins";
     private static String PARAM_DESTINATION = "destinations";
-    private static String PARAM_KEY = "key";
     private static String JSON_STATUS = "status";
     private static String JSON_ROWS = "rows";
     private static String JSON_VALUE = "value";

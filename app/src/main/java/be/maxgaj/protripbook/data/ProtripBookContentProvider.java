@@ -62,7 +62,7 @@ public class ProtripBookContentProvider extends ContentProvider {
                 break;
             case CAR_WITH_ID:
                 id = uri.getPathSegments().get(1);
-                mSelection = "_id=?";
+                mSelection = ProtripBookContract.CarEntry._ID+"=?";
                 mSelectionArgs = new String[]{id};
                 retCursor = db.query(ProtripBookContract.CarEntry.TABLE_NAME,
                         projection,
@@ -83,7 +83,7 @@ public class ProtripBookContentProvider extends ContentProvider {
                 break;
             case TRIP_WITH_ID:
                 id = uri.getPathSegments().get(1);
-                mSelection = "_id=?";
+                mSelection = ProtripBookContract.TripEntry._ID+"=?";
                 mSelectionArgs = new String[]{id};
                 retCursor = db.query(ProtripBookContract.TripEntry.TABLE_NAME,
                         projection,
@@ -104,7 +104,7 @@ public class ProtripBookContentProvider extends ContentProvider {
                 break;
             case ODOMETER_WITH_ID:
                 id = uri.getPathSegments().get(1);
-                mSelection = "_id=?";
+                mSelection = ProtripBookContract.OdometerEntry._ID+"=?";
                 mSelectionArgs = new String[]{id};
                 retCursor = db.query(ProtripBookContract.OdometerEntry.TABLE_NAME,
                         projection,
@@ -189,21 +189,21 @@ public class ProtripBookContentProvider extends ContentProvider {
         switch(match){
             case CAR_WITH_ID:
                 id = uri.getPathSegments().get(1);
-                tasksDeleted = db.delete(ProtripBookContract.CarEntry.TABLE_NAME, "_id=?", new String[]{id});
+                tasksDeleted = db.delete(ProtripBookContract.CarEntry.TABLE_NAME, ProtripBookContract.CarEntry._ID+"=?", new String[]{id});
                 break;
             case TRIPS:
                 tasksDeleted = db.delete(ProtripBookContract.TripEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case TRIP_WITH_ID:
                 id = uri.getPathSegments().get(1);
-                tasksDeleted = db.delete(ProtripBookContract.TripEntry.TABLE_NAME, "_id=?", new String[]{id});
+                tasksDeleted = db.delete(ProtripBookContract.TripEntry.TABLE_NAME, ProtripBookContract.TripEntry._ID+"=?", new String[]{id});
                 break;
             case ODOMETERS:
                 tasksDeleted = db.delete(ProtripBookContract.OdometerEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case ODOMETER_WITH_ID:
                 id = uri.getPathSegments().get(1);
-                tasksDeleted = db.delete(ProtripBookContract.OdometerEntry.TABLE_NAME, "_id=?", new String[]{id});
+                tasksDeleted = db.delete(ProtripBookContract.OdometerEntry.TABLE_NAME, ProtripBookContract.OdometerEntry._ID+"=?", new String[]{id});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri "+uri);
@@ -222,15 +222,15 @@ public class ProtripBookContentProvider extends ContentProvider {
         switch(match){
             case CAR_WITH_ID:
                 id = uri.getPathSegments().get(1);
-                tasksUpdated = db.update(ProtripBookContract.CarEntry.TABLE_NAME, values, "_id=?", new String[]{id});
+                tasksUpdated = db.update(ProtripBookContract.CarEntry.TABLE_NAME, values, ProtripBookContract.CarEntry._ID+"=?", new String[]{id});
                 break;
             case TRIP_WITH_ID:
                 id = uri.getPathSegments().get(1);
-                tasksUpdated = db.update(ProtripBookContract.TripEntry.TABLE_NAME, values, "_id=?", new String[]{id});
+                tasksUpdated = db.update(ProtripBookContract.TripEntry.TABLE_NAME, values, ProtripBookContract.TripEntry._ID+"=?", new String[]{id});
                 break;
             case ODOMETER_WITH_ID:
                 id = uri.getPathSegments().get(1);
-                tasksUpdated = db.update(ProtripBookContract.OdometerEntry.TABLE_NAME, values, "_id=?", new String[]{id});
+                tasksUpdated = db.update(ProtripBookContract.OdometerEntry.TABLE_NAME, values, ProtripBookContract.OdometerEntry._ID+"=?", new String[]{id});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri "+uri);

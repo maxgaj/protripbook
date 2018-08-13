@@ -19,7 +19,6 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import be.maxgaj.protripbook.data.ProtripBookContract;
@@ -138,7 +137,6 @@ public class CarActivity extends AppCompatActivity {
                 }
                 ProtripBookWidgetService.startActionReport(this);
                 finish();
-                // TODO Log errors
             }
         }
     }

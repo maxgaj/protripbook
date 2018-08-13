@@ -19,7 +19,6 @@ public class DatePreference extends DialogPreference {
     private int lastYear=0;
     private String dateval;
     private CharSequence summary;
-    //private DatePicker picker=null;
 
     public DatePreference(Context context){
         this(context, null);
