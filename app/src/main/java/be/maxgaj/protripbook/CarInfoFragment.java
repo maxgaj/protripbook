@@ -1,5 +1,6 @@
 package be.maxgaj.protripbook;
 
+import android.app.ActivityOptions;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -71,7 +72,8 @@ public class CarInfoFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), SettingsActivity.class);
-                startActivity(intent);
+                Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle();
+                startActivity(intent, bundle);
             }
         });
 
