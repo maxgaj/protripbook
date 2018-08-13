@@ -15,9 +15,9 @@ https://eu.udacity.com/course/android-developer-nanodegree-by-google--nd801
 
 ## API Key
 In order to use this code, you need to add your google API key.
-add this line inside res/values/api_key.xml
+Write this lines inside res/values/api_keys.xml
 ```
-\<resources\>
-    \<string name="google_api"\>[YOUR_API_KEY]\</string\>
-\</resources\>
+<resources>
+    <string name="google_api">[YOUR_API_KEY]</string>
+</resources>
 ```
