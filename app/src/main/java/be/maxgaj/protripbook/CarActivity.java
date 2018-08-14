@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -25,8 +26,16 @@ import be.maxgaj.protripbook.data.ProtripBookContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CarActivity extends AppCompatActivity {
+public class CarActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private Calendar calendar;
+
+    private static final String NAME_KEY = "nameKey";
+    private static final String BRAND_KEY = "BrandKey";
+    private static final String PLATE_KEY = "plateKey";
+    private static final String READING_KEY = "readingKey";
+    private static final String DAY_KEY = "dayKey";
+    private static final String MONTH_KEY = "monthKey";
+    private static final String YEAR_KEY = "yearKey";
 
     @BindView(R.id.car_input_layout_name) TextInputLayout nameLayout;
     @BindView(R.id.car_input_layout_brand) TextInputLayout brandLayout;
@@ -48,6 +57,20 @@ public class CarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_car);
         ButterKnife.bind(this);
 
+        this.calendar = Calendar.getInstance();
+        if (savedInstanceState!=null) {
+            this.nameEditText.setText(savedInstanceState.getString(NAME_KEY));
+            this.brandEditText.setText(savedInstanceState.getString(BRAND_KEY));
+            this.plateEditText.setText(savedInstanceState.getString(PLATE_KEY));
+            this.readingEditText.setText(savedInstanceState.getString(READING_KEY));
+            this.calendar.set(
+                    savedInstanceState.getInt(YEAR_KEY),
+                    savedInstanceState.getInt(MONTH_KEY),
+                    savedInstanceState.getInt(DAY_KEY)
+            );
+            updateDateLabel();
+        }
+
         //https://www.androidhive.info/2015/09/android-material-design-floating-labels-for-edittext/
         this.nameEditText.addTextChangedListener(new TextListener(this.nameEditText));
         this.brandEditText.addTextChangedListener(new TextListener(this.brandEditText));
@@ -57,27 +80,15 @@ public class CarActivity extends AppCompatActivity {
 
         /* Date picker */
         // https://stackoverflow.com/questions/14933330/datepicker-how-to-popup-datepicker-when-click-on-edittext
-        this.calendar = Calendar.getInstance();
-        final DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+        this.dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateDateLabel();
-            }
-        };
-        dateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
-                    new DatePickerDialog(
-                            CarActivity.this,
-                            dateListener,
-                            calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH),
-                            calendar.get(Calendar.DAY_OF_MONTH)).show();
-                }
+            public void onClick(View v) {
+                DialogFragment dialogFragment = DatePickerFragment.newInstance(
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                );
+                dialogFragment.show(getSupportFragmentManager(), DialogFragment.class.getSimpleName());
             }
         });
 
@@ -96,6 +107,18 @@ public class CarActivity extends AppCompatActivity {
                 submitForm();
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(BRAND_KEY, this.brandEditText.getText().toString());
+        outState.putString(NAME_KEY, this.nameEditText.getText().toString());
+        outState.putString(PLATE_KEY, this.plateEditText.getText().toString());
+        outState.putString(READING_KEY, this.readingEditText.getText().toString());
+        outState.putInt(DAY_KEY, this.calendar.get(Calendar.DAY_OF_MONTH));
+        outState.putInt(MONTH_KEY, this.calendar.get(Calendar.MONTH));
+        outState.putInt(YEAR_KEY, this.calendar.get(Calendar.YEAR));
+        super.onSaveInstanceState(outState);
     }
 
     private void submitForm(){
@@ -203,6 +226,12 @@ public class CarActivity extends AppCompatActivity {
         String format = "dd/MM/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.FRANCE);
         dateEditText.setText(sdf.format(this.calendar.getTime()));
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        this.calendar.set(year, month, dayOfMonth);
+        updateDateLabel();
     }
 
     private class TextListener implements TextWatcher {

@@ -1,6 +1,8 @@
 package be.maxgaj.protripbook.preference;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.view.View;

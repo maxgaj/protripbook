@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,7 +28,7 @@ import be.maxgaj.protripbook.data.ProtripBookContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OdometerActivity extends AppCompatActivity {
+public class OdometerActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     private static final String TAG = OdometerActivity.class.getSimpleName();
 
     private Calendar calendar;
@@ -35,6 +36,16 @@ public class OdometerActivity extends AppCompatActivity {
     private String unit;
     private String lastDate;
     private String lastReading;
+
+
+    private static final String CAR_ID_KEY = "carIdKey";
+    private static final String UNIT_KEY = "unitKey";
+    private static final String LAST_DATE_KEY = "lastDateKey";
+    private static final String LAST_READING_KEY = "lastReadingKey";
+    private static final String READING_KEY = "readingKey";
+    private static final String DAY_KEY = "dayKey";
+    private static final String MONTH_KEY = "monthKey";
+    private static final String YEAR_KEY = "yearKey";
 
     @BindView(R.id.odometer_layout_reading) TextInputLayout readingLayout;
     @BindView(R.id.odometer_layout_date) TextInputLayout dateLayout;
@@ -49,40 +60,43 @@ public class OdometerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_odometer);
         ButterKnife.bind(this);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        this.carId = sharedPreferences.getString(getString(R.string.pref_car_key), getString(R.string.pref_car_default));
-        this.unit = sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km));
-
-        Intent intent = getIntent();
-        if (intent.hasExtra(OdometerFragment.INTENT_DATE))
-            this.lastDate = intent.getStringExtra(OdometerFragment.INTENT_DATE);
-        if (intent.hasExtra(OdometerFragment.INTENT_READING))
-            this.lastReading = intent.getStringExtra(OdometerFragment.INTENT_READING);
+        this.calendar = Calendar.getInstance();
+        if (savedInstanceState!=null) {
+            this.lastReading = savedInstanceState.getString(LAST_READING_KEY);
+            this.lastDate = savedInstanceState.getString(LAST_DATE_KEY);
+            this.carId = savedInstanceState.getString(CAR_ID_KEY);
+            this.unit = savedInstanceState.getString(UNIT_KEY);
+            this.readingEditText.setText(savedInstanceState.getString(READING_KEY));
+            this.calendar.set(
+                    savedInstanceState.getInt(YEAR_KEY),
+                    savedInstanceState.getInt(MONTH_KEY),
+                    savedInstanceState.getInt(DAY_KEY)
+            );
+            updateDateLabel();
+        }
+        else {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            this.carId = sharedPreferences.getString(getString(R.string.pref_car_key), getString(R.string.pref_car_default));
+            this.unit = sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km));
+            Intent intent = getIntent();
+            if (intent.hasExtra(OdometerFragment.INTENT_DATE))
+                this.lastDate = intent.getStringExtra(OdometerFragment.INTENT_DATE);
+            if (intent.hasExtra(OdometerFragment.INTENT_READING))
+                this.lastReading = intent.getStringExtra(OdometerFragment.INTENT_READING);
+        }
 
         this.readingEditText.addTextChangedListener(new TextListener(this.readingEditText));
         this.dateEditText.addTextChangedListener(new TextListener(this.dateEditText));
 
-        this.calendar = Calendar.getInstance();
-        final DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+        this.dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateDateLabel();
-            }
-        };
-        dateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
-                    new DatePickerDialog(
-                            OdometerActivity.this,
-                            dateListener,
-                            calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH),
-                            calendar.get(Calendar.DAY_OF_MONTH)).show();
-                }
+            public void onClick(View v) {
+                DialogFragment dialogFragment = DatePickerFragment.newInstance(
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                );
+                dialogFragment.show(getSupportFragmentManager(), DialogFragment.class.getSimpleName());
             }
         });
 
@@ -101,6 +115,19 @@ public class OdometerActivity extends AppCompatActivity {
                 submitForm();
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(CAR_ID_KEY, this.carId);
+        outState.putString(UNIT_KEY, this.unit);
+        outState.putString(LAST_DATE_KEY, this.lastDate);
+        outState.putString(LAST_READING_KEY, this.lastReading);
+        outState.putString(READING_KEY, this.readingEditText.getText().toString());
+        outState.putInt(DAY_KEY, this.calendar.get(Calendar.DAY_OF_MONTH));
+        outState.putInt(MONTH_KEY, this.calendar.get(Calendar.MONTH));
+        outState.putInt(YEAR_KEY, this.calendar.get(Calendar.YEAR));
+        super.onSaveInstanceState(outState);
     }
 
     private void submitForm(){
@@ -167,7 +194,11 @@ public class OdometerActivity extends AppCompatActivity {
         dateEditText.setText(sdf.format(this.calendar.getTime()));
     }
 
-
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        this.calendar.set(year, month, dayOfMonth);
+        updateDateLabel();
+    }
 
     private class TextListener implements TextWatcher {
         private View view;

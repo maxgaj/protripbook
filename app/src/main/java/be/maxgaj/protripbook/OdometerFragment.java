@@ -1,6 +1,7 @@
 package be.maxgaj.protripbook;
 
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -27,6 +28,7 @@ import butterknife.ButterKnife;
 public class OdometerFragment extends Fragment implements
         SharedPreferences.OnSharedPreferenceChangeListener,
         LoaderManager.LoaderCallbacks<Cursor> {
+
     private String carId;
 
     private static final String TAG = OdometerFragment.class.getSimpleName();

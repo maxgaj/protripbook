@@ -19,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
@@ -41,7 +42,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,7 +54,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TripActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>,
+        DatePickerDialog.OnDateSetListener {
     private Calendar calendar;
     private String carId;
     private String unit;
@@ -70,6 +71,18 @@ public class TripActivity extends AppCompatActivity implements
     private static final String CREATE = "create";
     private static final String TAG = TripActivity.class.getSimpleName();
     private static final int TRIP_EDIT_LOADER_ID = 60;
+
+    private static final String TRIP_ID_KEY = "tripIdKey";
+    private static final String MODE_KEY = "modeKey";
+    private static final String CAR_ID_KEY = "carIdKey";
+    private static final String UNIT_KEY = "unitKey";
+    private static final String FROM_KEY = "fromKey";
+    private static final String TO_KEY = "toKey";
+    private static final String DISTANCE_KEY = "distanceKey";
+    private static final String ROUND_KEY = "roundKey";
+    private static final String DAY_KEY = "dayKey";
+    private static final String MONTH_KEY = "monthKey";
+    private static final String YEAR_KEY = "yearKey";
 
     @BindView(R.id.trip_input_layout_from) TextInputLayout fromLayout;
     @BindView(R.id.trip_input_layout_to) TextInputLayout toLayout;
@@ -91,18 +104,81 @@ public class TripActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_trip);
         ButterKnife.bind(this);
 
-        Intent intent = getIntent();
-        if (intent.hasExtra(TripAdapter.TRIP_ID)){
-            this.tripId = intent.getStringExtra(TripAdapter.TRIP_ID);
-            this.mode = EDIT;
+        this.calendar = Calendar.getInstance();
+        if (savedInstanceState!=null){
+            this.tripId = savedInstanceState.getString(TRIP_ID_KEY);
+            this.mode = savedInstanceState.getString(MODE_KEY);
+            this.carId = savedInstanceState.getString(CAR_ID_KEY);
+            this.unit = savedInstanceState.getString(UNIT_KEY);
+            this.fromEditText.setText(savedInstanceState.getString(FROM_KEY));
+            this.toEditText.setText(savedInstanceState.getString(TO_KEY));
+            this.distanceEditText.setText(savedInstanceState.getString(DISTANCE_KEY));
+            this.calendar.set(
+                    savedInstanceState.getInt(YEAR_KEY),
+                    savedInstanceState.getInt(MONTH_KEY),
+                    savedInstanceState.getInt(DAY_KEY)
+            );
+            updateDateLabel();
+            if (savedInstanceState.getBoolean(ROUND_KEY)) {
+                this.roundSwitch.setText(R.string.trip_input_hint_round_true);
+                this.roundSwitch.setChecked(true);
+            }
+            else {
+                this.roundSwitch.setText(R.string.trip_input_hint_round_false);
+                this.roundSwitch.setChecked(false);
+            }
         }
-        else {
-            this.mode = CREATE;
+        else{
+            Intent intent = getIntent();
+            if (intent.hasExtra(TripAdapter.TRIP_ID)){
+                this.tripId = intent.getStringExtra(TripAdapter.TRIP_ID);
+                this.mode = EDIT;
+            }
+            else {
+                this.mode = CREATE;
+            }
+            Log.e(TAG, "onCreate: debut mode="+this.mode );
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            this.carId = sharedPreferences.getString(getString(R.string.pref_car_key), getString(R.string.pref_car_default));
+            this.unit = sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km));
+
+            this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            this.resultReceiver = new AddressResultReceiver(new Handler());
+
+            if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+                ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  }, FetchAddressIntentService.MY_PERMISSION_ACCESS_LOCATION );
+            }
+
+            if(this.mode.equals(EDIT)){
+                getSupportLoaderManager().initLoader(TRIP_EDIT_LOADER_ID, null, this);
+            }
+            else {
+                if ( Build.VERSION.SDK_INT >= 23 &&
+                        ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+                    Log.e(TAG, "onCreate: No Permission");
+                }
+                this.fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                Log.e(TAG, "onSuccess: ");
+                                lastKnowLocation = location;
+                                if (lastKnowLocation == null)
+                                    return;
+                                if (!Geocoder.isPresent()){
+                                    Toast.makeText(TripActivity.this,
+                                            R.string.address_error_no_geocoder_available,
+                                            Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+                                Log.e(TAG, "onSuccess: "+lastKnowLocation.getLatitude() );
+                                startFetchAddressIntentService();
+                            }
+                        });
+            }
         }
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        this.carId = sharedPreferences.getString(getString(R.string.pref_car_key), getString(R.string.pref_car_default));
-        this.unit = sharedPreferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_value_km));
 
         this.fromEditText.addTextChangedListener(new TextListener(this.fromEditText));
         this.toEditText.addTextChangedListener(new TextListener(this.toEditText));
@@ -117,28 +193,15 @@ public class TripActivity extends AppCompatActivity implements
                     buttonView.setText(R.string.trip_input_hint_round_false);
             }
         });
-
-        this.calendar = Calendar.getInstance();
-        final DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+        this.dateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateDateLabel();
-            }
-        };
-        dateEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus){
-                    new DatePickerDialog(
-                            TripActivity.this,
-                            dateListener,
-                            calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH),
-                            calendar.get(Calendar.DAY_OF_MONTH)).show();
-                }
+            public void onClick(View v) {
+                DialogFragment dialogFragment = DatePickerFragment.newInstance(
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                );
+                dialogFragment.show(getSupportFragmentManager(), DialogFragment.class.getSimpleName());
             }
         });
 
@@ -174,43 +237,27 @@ public class TripActivity extends AppCompatActivity implements
             }
         });
 
-        this.fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        this.resultReceiver = new AddressResultReceiver(new Handler());
-
-        if ( ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  }, FetchAddressIntentService.MY_PERMISSION_ACCESS_LOCATION );
-        }
-
 
         if(this.mode.equals(EDIT)){
             this.addButton.setText(R.string.trip_button_update);
             getSupportActionBar().setTitle(R.string.trip_activity_edit_label);
-            getSupportLoaderManager().initLoader(TRIP_EDIT_LOADER_ID, null, this);
         }
-        else {
-            if ( Build.VERSION.SDK_INT >= 23 &&
-                    ContextCompat.checkSelfPermission( this, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
-                Log.e(TAG, "onCreate: No Permission");
-            }
-            this.fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            Log.e(TAG, "onSuccess: ");
-                            lastKnowLocation = location;
-                            if (lastKnowLocation == null)
-                                return;
-                            if (!Geocoder.isPresent()){
-                                Toast.makeText(TripActivity.this,
-                                        R.string.address_error_no_geocoder_available,
-                                        Toast.LENGTH_LONG).show();
-                                return;
-                            }
-                            Log.e(TAG, "onSuccess: "+lastKnowLocation.getLatitude() );
-                            startFetchAddressIntentService();
-                        }
-                    });
-        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(TRIP_ID_KEY, this.tripId);
+        outState.putString(MODE_KEY, this.mode);
+        outState.putString(CAR_ID_KEY, this.carId);
+        outState.putString(UNIT_KEY, this.unit);
+        outState.putString(FROM_KEY, this.fromEditText.getText().toString());
+        outState.putString(TO_KEY, this.toEditText.getText().toString());
+        outState.putString(DISTANCE_KEY, this.distanceEditText.getText().toString());
+        outState.putBoolean(ROUND_KEY, this.roundSwitch.isChecked());
+        outState.putInt(DAY_KEY, this.calendar.get(Calendar.DAY_OF_MONTH));
+        outState.putInt(MONTH_KEY, this.calendar.get(Calendar.MONTH));
+        outState.putInt(YEAR_KEY, this.calendar.get(Calendar.YEAR));
+        super.onSaveInstanceState(outState);
     }
 
     protected void startFetchAddressIntentService(){
@@ -351,6 +398,12 @@ public class TripActivity extends AppCompatActivity implements
         dateEditText.setText(sdf.format(this.calendar.getTime()));
     }
 
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        this.calendar.set(year, month, dayOfMonth);
+        updateDateLabel();
+    }
+
     private class TextListener implements TextWatcher {
         private View view;
 
@@ -442,7 +495,6 @@ public class TripActivity extends AppCompatActivity implements
             this.toEditText.setText(to);
             this.distanceEditText.setText(String.valueOf(distance));
             this.dateEditText.setText(date);
-            this.roundSwitch.setChecked(isRound==1);
             if (isRound==1) {
                 this.roundSwitch.setText(R.string.trip_input_hint_round_true);
                 this.roundSwitch.setChecked(true);

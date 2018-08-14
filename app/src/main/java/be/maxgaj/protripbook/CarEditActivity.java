@@ -1,5 +1,6 @@
 package be.maxgaj.protripbook;
 
+import android.app.DatePickerDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -25,6 +26,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 import be.maxgaj.protripbook.data.ProtripBookContract;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +38,11 @@ public class CarEditActivity extends AppCompatActivity implements
     private String idCar;
     private static final String TAG = CarEditActivity.class.getSimpleName();
     private static final int CAR_EDIT_LOADER_ID = 40;
+
+    private static final String CAR_ID_KEY = "carIdKey";
+    private static final String NAME_KEY = "naleKey";
+    private static final String BRAND_KEY = "BrandKey";
+    private static final String PLATE_KEY = "plateKey";
 
     @BindView(R.id.car_input_layout_name) TextInputLayout nameLayout;
     @BindView(R.id.car_input_layout_brand) TextInputLayout brandLayout;
@@ -52,13 +60,24 @@ public class CarEditActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_car_edit);
         ButterKnife.bind(this);
 
+        if (savedInstanceState!=null) {
+            this.nameEditText.setText(savedInstanceState.getString(NAME_KEY));
+            this.brandEditText.setText(savedInstanceState.getString(BRAND_KEY));
+            this.plateEditText.setText(savedInstanceState.getString(PLATE_KEY));
+            this.idCar = savedInstanceState.getString(CAR_ID_KEY);
+        }
+        else {
+            Intent intent = getIntent();
+            if (intent.hasExtra(Intent.EXTRA_TEXT))
+                this.idCar = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if (this.idCar!=null && (!(this.idCar.equals(getString(R.string.pref_car_default))))){
+                getSupportLoaderManager().initLoader(CAR_EDIT_LOADER_ID, null, this);
+            }
+        }
+
         this.nameEditText.addTextChangedListener(new TextListener(this.nameEditText));
         this.brandEditText.addTextChangedListener(new TextListener(this.brandEditText));
         this.plateEditText.addTextChangedListener(new TextListener(this.plateEditText));
-
-        Intent intent = getIntent();
-        if (intent.hasExtra(Intent.EXTRA_TEXT))
-            this.idCar = intent.getStringExtra(Intent.EXTRA_TEXT);
 
         /* Cancel button */
         this.cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -82,11 +101,15 @@ public class CarEditActivity extends AppCompatActivity implements
                 deleteCar();
             }
         });
+    }
 
-
-        if (this.idCar!=null && (!(this.idCar.equals(getString(R.string.pref_car_default))))){
-            getSupportLoaderManager().initLoader(CAR_EDIT_LOADER_ID, null, this);
-        }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(BRAND_KEY, this.brandEditText.getText().toString());
+        outState.putString(NAME_KEY, this.nameEditText.getText().toString());
+        outState.putString(PLATE_KEY, this.plateEditText.getText().toString());
+        outState.putString(CAR_ID_KEY, this.idCar);
+        super.onSaveInstanceState(outState);
     }
 
     private void submitForm(){
