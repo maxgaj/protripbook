@@ -121,10 +121,12 @@ public class TripActivity extends AppCompatActivity implements
             updateDateLabel();
             if (savedInstanceState.getBoolean(ROUND_KEY)) {
                 this.roundSwitch.setText(R.string.trip_input_hint_round_true);
+                this.roundSwitch.setContentDescription(getString(R.string.trip_input_hint_round_true));
                 this.roundSwitch.setChecked(true);
             }
             else {
                 this.roundSwitch.setText(R.string.trip_input_hint_round_false);
+                this.roundSwitch.setContentDescription(getString(R.string.trip_input_hint_round_false));
                 this.roundSwitch.setChecked(false);
             }
         }
@@ -187,10 +189,14 @@ public class TripActivity extends AppCompatActivity implements
         this.roundSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
+                if (isChecked) {
                     buttonView.setText(R.string.trip_input_hint_round_true);
-                else
+                    buttonView.setContentDescription(getString(R.string.trip_input_hint_round_true));
+                }
+                else{
                     buttonView.setText(R.string.trip_input_hint_round_false);
+                    buttonView.setContentDescription(getString(R.string.trip_input_hint_round_false));
+                }
             }
         });
         this.dateEditText.setOnClickListener(new View.OnClickListener() {

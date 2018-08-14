@@ -53,7 +53,6 @@
             app:layout_constraintStart_toEndOf="@+id/report_from_label"
             app:layout_constraintBottom_toBottomOf="@+id/report_logo"
             android:layout_marginStart="@dimen/text_word"
-            android:text="00/00/0000"
             android:textSize="@dimen/text_size" />
 
         <TextView
@@ -74,7 +73,6 @@
             app:layout_constraintStart_toEndOf="@+id/report_to_label"
             app:layout_constraintBottom_toBottomOf="@+id/report_logo"
             android:layout_marginStart="@dimen/text_word"
-            android:text="00/00/0000"
             android:textSize="@dimen/text_size" />
 
         <TextView
@@ -97,7 +95,6 @@
             app:layout_constraintTop_toBottomOf="@+id/report_trip_label"
             android:layout_marginStart="@dimen/card_logo_margin"
             android:layout_marginTop="@dimen/text_word"
-            android:text="00000.0"
             android:textSize="@dimen/text_size" />
 
         <TextView
@@ -130,7 +127,6 @@
             app:layout_constraintTop_toBottomOf="@+id/report_odometer_label"
             android:layout_marginStart="@dimen/card_logo_margin"
             android:layout_marginTop="@dimen/text_word"
-            android:text="00000.0"
             android:textSize="@dimen/text_size" />
 
         <TextView
@@ -151,7 +147,6 @@
             app:layout_constraintEnd_toStartOf="@+id/report_ratio_unit"
             app:layout_constraintBottom_toBottomOf="@+id/report_odometer"
             android:layout_marginEnd="@dimen/text_word"
-            android:text="00"
             android:textColor="@color/light_blue_700"
             android:textSize="@dimen/ratio_text_size" />
 

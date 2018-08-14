@@ -50,6 +50,7 @@
             android:textSize="@dimen/switch_text_size"
             app:switchPadding="@dimen/switch_margin"
             android:layout_gravity="end"
+            android:contentDescription="@string/trip_input_hint_round_false"
             android:text="@string/trip_input_hint_round_false" />
 
         <Button

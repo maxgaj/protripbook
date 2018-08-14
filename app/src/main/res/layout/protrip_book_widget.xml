@@ -19,7 +19,6 @@
             android:layout_marginTop="@dimen/card_padding"
             android:textColor="@color/light_blue_700"
             android:textSize="@dimen/title_size"
-            android:text="My Car"
             android:textStyle="bold" />
 
         <TextView
@@ -27,7 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/card_padding"
-            android:text="00"
             android:layout_below="@+id/widget_name_value"
             android:textColor="@color/light_blue_700"
             android:textSize="@dimen/ratio_text_size" />
